@@ -7,6 +7,9 @@ TagManager:
   - TileGear
   - TileOxygen
   - TileWaste
+  - TileTool
+  - TileEnergy
+  - TileChip
   layers:
   - Default
   - TransparentFX
