@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7288259051817382416}
   m_Layer: 0
   m_Name: TileWaste
-  m_TagString: Untagged
+  m_TagString: TileWaste
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,6 +101,7 @@ MonoBehaviour:
   prevRow: 0
   targetX: 0
   targetY: 0
+  isMatched: 0
   swipeAngle: 0
   swipeResist: 1
 --- !u!58 &7288259051817382416

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7903201461852613558}
   m_Layer: 0
   m_Name: TileOxygen
-  m_TagString: Untagged
+  m_TagString: TileOxygen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,6 +101,7 @@ MonoBehaviour:
   prevRow: 0
   targetX: 0
   targetY: 0
+  isMatched: 0
   swipeAngle: 0
   swipeResist: 1
 --- !u!58 &7903201461852613558
