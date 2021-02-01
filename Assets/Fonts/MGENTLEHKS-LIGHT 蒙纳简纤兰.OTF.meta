@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e3248a55e25654442b87821df2bf283d
+guid: d1bb09562b3d2e746b4ce4fcbe0e8c20
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: 7 hours
+  fontName: MGentleHKS
   fontNames:
-  - 7 hours
+  - MGentleHKS
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

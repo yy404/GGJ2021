@@ -15,6 +15,7 @@ public class Dot : MonoBehaviour
 
     private Board board;
     private FindMatches findMatches;
+    private GameManagement gameManagement;
     private GameObject otherDot;
     private Vector2 firstTouchPosition;
     private Vector2 finalTouchPosition;
@@ -27,6 +28,7 @@ public class Dot : MonoBehaviour
     {
         board = FindObjectOfType<Board>();
         findMatches = FindObjectOfType<FindMatches>();
+        gameManagement = FindObjectOfType<GameManagement>();
     }
 
     // Update is called once per frame
@@ -77,10 +79,7 @@ public class Dot : MonoBehaviour
     // This is for testing and Debug only.
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            Debug.Log("Mouse was clicked");
-        }
+        gameManagement.DisplayDialogueText("Drag to swap");
     }
 
     private void OnMouseDown()
@@ -98,7 +97,10 @@ public class Dot : MonoBehaviour
         if (board.currentState == GameState.move)
         {
             finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            CalculateAngle(); // and may move pieces
+            if (gameManagement.CheckIfGameEnd() == false)
+            {
+                CalculateAngle(); // and may move pieces
+            }
         }
     }
 
@@ -114,6 +116,9 @@ public class Dot : MonoBehaviour
             finalTouchPosition.x - firstTouchPosition.x) * 180 / Mathf.PI;
             // Debug.Log(swipeAngle);
             MovePieces();
+
+            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
+            gameManagement.IncreaseDay();
         }
         else
         {

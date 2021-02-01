@@ -6,6 +6,14 @@ public enum GameState
 {
     wait,
     move,
+    pause,
+}
+
+public enum TileKind
+{
+    //SpecialRock,
+    Rock,
+    Normal,
 }
 
 public class Board : MonoBehaviour
@@ -14,66 +22,76 @@ public class Board : MonoBehaviour
     public int height;
     public int offset;
     public GameObject tilePrefab; // The background tile prefab
+    public GameObject rockTilePrefab;
     public GameObject[] dots; // A list of dot prefabs
     public GameObject[,] allDots;
+
+    private BackgroundTile[,] rockTiles;
+    public int rockTileCount = 48;
 
     public float refillDelay = 0.5f;
 
     public GameState currentState = GameState.move;
 
     private FindMatches findMatches;
+    private GameManagement gameManagement;
+    private SoundManagement soundManagement;
 
     // Start is called before the first frame update
     void Start()
     {
         findMatches = FindObjectOfType<FindMatches>();
+        gameManagement = FindObjectOfType<GameManagement>();
+        soundManagement = FindObjectOfType<SoundManagement>();
         allDots = new GameObject[width, height];
+        rockTiles = new BackgroundTile[width, height];
         SetUp();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKey("escape"))
-        {
-            Application.Quit();
-        }
-    }
+    //// Update is called once per frame
+    //void Update()
+    //{
+
+    //}
 
     // Initialise the board with tiles and dots
     private void SetUp()
-    { 
+    {
+        GenerateRockTiles();
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
                 // Create a background tile at (i,j) position
                 Vector2 tilePosition = new Vector2(i, j);
-                GameObject backgroundTile = Instantiate(tilePrefab,tilePosition, Quaternion.identity) as GameObject; //
+                GameObject backgroundTile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject; //
                 backgroundTile.transform.parent = this.transform;
                 backgroundTile.name = "( " + i + ", " + j + " )";
 
-                // Choose a random type of dots 
-                int dotToUse = Random.Range(0, dots.Length); 
-                int maxIterations = 0;
-                while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
+                if (rockTiles[i,j] == null)
                 {
-                    dotToUse = Random.Range(0, dots.Length);
-                    maxIterations++;
-                    //Debug.Log(maxIterations);
+                    // Choose a random type of dots 
+                    int dotToUse = Random.Range(0, dots.Length);
+                    int maxIterations = 0;
+                    while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
+                    {
+                        dotToUse = Random.Range(0, dots.Length);
+                        maxIterations++;
+                        //Debug.Log(maxIterations);
+                    }
+
+                    // Create a dot at (i,j) position
+                    Vector2 tempPosition = new Vector2(i, j + offset);
+                    GameObject dot = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
+                    dot.transform.parent = this.transform;
+                    dot.name = "( " + i + ", " + j + " )";
+
+                    // Initialise dot variables
+                    dot.GetComponent<Dot>().row = j;
+                    dot.GetComponent<Dot>().column = i;
+
+                    allDots[i, j] = dot;
                 }
-
-                // Create a dot at (i,j) position
-                Vector2 tempPosition = new Vector2(i, j + offset);
-                GameObject dot = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
-                dot.transform.parent = this.transform;
-                dot.name = "( " + i + ", " + j + " )";
-
-                // Initialise dot variables
-                dot.GetComponent<Dot>().row = j;
-                dot.GetComponent<Dot>().column = i;
-
-                allDots[i, j] = dot;
             }
         }
     }
@@ -133,6 +151,19 @@ public class Board : MonoBehaviour
     {
         if (allDots[column, row].GetComponent<Dot>().isMatched)
         {
+
+            DamageRock(column, row);
+
+            if (allDots[column, row].tag == "TileOxygen")
+            {
+                gameManagement.ConsumeOxygen(-3); // add 3
+            }
+
+            if (soundManagement != null)
+            {
+                soundManagement.PlayRandomDestroyNoise();
+            }
+
             Destroy(allDots[column, row]);
             allDots[column, row] = null;
         }
@@ -160,8 +191,8 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                // If the current spot isn't empty
-                if (allDots[i, j] == null)
+                // If the current spot is empty
+                if (!rockTiles[i, j] && allDots[i, j] == null)
                 {
                     // Loop from the space above to the top of column
                     for (int k = j + 1; k < height; k++)
@@ -212,7 +243,7 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                if (allDots[i, j] == null)
+                if (!rockTiles[i, j] && allDots[i, j] == null)
                 {
                     Vector2 tempPosition = new Vector2(i, j + offset);
                     int dotToUse = Random.Range(0, dots.Length);
@@ -366,31 +397,104 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                // pick a random number
-                int pieceToUse = Random.Range(0, newBoard.Count);
-
-                int maxIterations = 0;
-                while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100)
+                // If this spot is not rock
+                if (!rockTiles[i, j])
                 {
-                    pieceToUse = Random.Range(0, newBoard.Count);
-                    maxIterations++;
-                    // Debug.Log(maxIterations);
+                    // pick a random number
+                    int pieceToUse = Random.Range(0, newBoard.Count);
+
+                    int maxIterations = 0;
+                    while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100)
+                    {
+                        pieceToUse = Random.Range(0, newBoard.Count);
+                        maxIterations++;
+                        // Debug.Log(maxIterations);
+                    }
+                    // Make a container for the piece
+                    Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
+                    // Assign the column/row to the piece
+                    piece.column = i;
+                    piece.row = j;
+                    // Fill in the dots array with this new piece
+                    allDots[i, j] = newBoard[pieceToUse];
+                    // Remove it from the list
+                    newBoard.Remove(newBoard[pieceToUse]);
                 }
-                // Make a container for the piece
-                Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
-                // Assign the column/row to the piece
-                piece.column = i;
-                piece.row = j;
-                // Fill in the dots array with this new piece
-                allDots[i, j] = newBoard[pieceToUse];
-                // Remove it from the list
-                newBoard.Remove(newBoard[pieceToUse]);
             }
         }
         // Check if it's still deadlocked
         if (IsDeadlocked())
         {
             ShuffleBoard();
+        }
+    }
+
+    private void GenerateRockTiles()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if ((i > 3) || (j < 4))
+                {
+                    Vector2 tempPosition = new Vector2(i, j);
+                    GameObject tile = Instantiate(rockTilePrefab, tempPosition, Quaternion.identity);
+                    rockTiles[i, j] = tile.GetComponent<BackgroundTile>();
+                    tile.transform.parent = this.transform;
+                }
+            }
+        }
+    }
+
+    private void DamageRock(int column, int row)
+    {
+        if (column > 0)
+        {
+            if (rockTiles[column - 1, row])
+            {
+                rockTiles[column - 1, row].TakeDamage(Random.Range(1, 3));
+                if (rockTiles[column - 1, row].hitPoints <= 0)
+                {
+                    rockTiles[column - 1, row] = null;
+                    rockTileCount--;
+                }
+            }
+        }
+        if (column < width - 1)
+        {
+            if (rockTiles[column + 1, row])
+            {
+                rockTiles[column + 1, row].TakeDamage(Random.Range(1, 3));
+                if (rockTiles[column + 1, row].hitPoints <= 0)
+                {
+                    rockTiles[column + 1, row] = null;
+                    rockTileCount--;
+                }
+            }
+        }
+        if (row > 0)
+        {
+            if (rockTiles[column, row - 1])
+            {
+                rockTiles[column, row - 1].TakeDamage(Random.Range(1, 3));
+                if (rockTiles[column, row - 1].hitPoints <= 0)
+                {
+                    rockTiles[column, row - 1] = null;
+                    rockTileCount--;
+                }
+            }
+        }
+        if (row < height - 1)
+        {
+            if (rockTiles[column, row + 1])
+            {
+                rockTiles[column, row + 1].TakeDamage(Random.Range(1, 3));
+                if (rockTiles[column, row + 1].hitPoints <= 0)
+                {
+                    rockTiles[column, row + 1] = null;
+                    rockTileCount--;
+                }
+            }
         }
     }
 
