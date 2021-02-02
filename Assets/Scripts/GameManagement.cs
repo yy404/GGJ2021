@@ -96,17 +96,21 @@ public class GameManagement : MonoBehaviour
 
     private void SetupItemMap()
     {
+        int shipSeq = Random.Range(0, board.width * board.height);
+        int shipX = shipSeq % board.width;
+        int shipY = shipSeq / board.width;
+
         for (int i = 0; i < board.width; i++)
         {
             for (int j = 0; j < board.height; j++)
             {
                 if ((i == 0) && (j == 0))
                 {
-                    ItemMap[i, j] = ItemType.Ship;
-                }
-                else if ((i == 1) && (j == 1))
-                {
                     ItemMap[i, j] = ItemType.Chip;
+                }
+                else if ((i == shipX) && (j == shipY))
+                {
+                    ItemMap[i, j] = ItemType.Ship;
                 }
                 else
                 {
