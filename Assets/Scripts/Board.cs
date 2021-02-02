@@ -24,7 +24,7 @@ public class Board : MonoBehaviour
     public GameObject tilePrefab; // The background tile prefab
     public GameObject rockTilePrefab;
     public GameObject[] dots; // A list of dot prefabs
-    public GameObject[,] allDots;
+    public GameObject[,] allDots; //
 
     private BackgroundTile[,] rockTiles;
     public int rockTileCount = 48;
@@ -435,11 +435,13 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                if ((i > 3) || (j < 4))
+                //if ((i > 3) || (j < 4))
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     GameObject tile = Instantiate(rockTilePrefab, tempPosition, Quaternion.identity);
                     rockTiles[i, j] = tile.GetComponent<BackgroundTile>();
+                    rockTiles[i, j].column = i;
+                    rockTiles[i, j].row = j;
                     tile.transform.parent = this.transform;
                 }
             }

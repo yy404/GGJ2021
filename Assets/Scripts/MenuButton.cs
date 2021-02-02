@@ -4,17 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class MenuUI : MonoBehaviour
+public class MenuButton: MonoBehaviour
 {
-    public Button startButton;
-    public Button exitButton;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        startButton.onClick.AddListener(StartGame);
-        exitButton.onClick.AddListener(ExitGame);
-    }
+    //// Start is called before the first frame update
+    //void Start()
+    //{
+
+    //}
 
     //// Update is called once per frame
     //void Update()

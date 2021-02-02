@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum ItemType
+{
+    Box,
+    Ship,
+    None,
+}
+
 public class GameManagement : MonoBehaviour
 {
     public Text oxygenText;
@@ -12,6 +19,10 @@ public class GameManagement : MonoBehaviour
 
     public int maxOxygen;
     public int oxygenDailyConsumption;
+
+    public GameObject endGamePanel;
+
+    public ItemType[,] ItemMap;
 
     private Board board;
     private int currOxygen;
@@ -23,6 +34,9 @@ public class GameManagement : MonoBehaviour
     void Start()
     {
         board = FindObjectOfType<Board>();
+
+        ItemMap = new ItemType[board.width, board.height];
+        SetupItemMap();
 
         currOxygen = maxOxygen;
         currDay = 0;
@@ -63,6 +77,12 @@ public class GameManagement : MonoBehaviour
         currDay++;
     }
 
+    public void SetGameEnd()
+    {
+        endGame = true;
+        EndGameDisplay();
+    }
+
     public bool CheckIfGameEnd()
     {
         return endGame;
@@ -71,5 +91,31 @@ public class GameManagement : MonoBehaviour
     public void DisplayDialogueText(string displayText)
     {
         dialogueText.text = displayText;
+    }
+
+    private void SetupItemMap()
+    {
+        for (int i = 0; i < board.width; i++)
+        {
+            for (int j = 0; j < board.height; j++)
+            {
+                if ((i == 0) && (j == 0))
+                {
+                    ItemMap[i, j] = ItemType.Box;
+                }
+                else
+                {
+                    ItemMap[i, j] = ItemType.None;
+                }
+            }
+        }
+    }
+
+    public void EndGameDisplay()
+    {
+        Debug.Log("End game");
+        endGamePanel.SetActive(true);
+
+        //board.currentState = GameState.lose;
     }
 }
