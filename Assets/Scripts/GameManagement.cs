@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public enum ItemType
 {
     Box,
+    Chip,
     Ship,
     None,
 }
@@ -101,7 +102,11 @@ public class GameManagement : MonoBehaviour
             {
                 if ((i == 0) && (j == 0))
                 {
-                    ItemMap[i, j] = ItemType.Box;
+                    ItemMap[i, j] = ItemType.Ship;
+                }
+                else if ((i == 1) && (j == 1))
+                {
+                    ItemMap[i, j] = ItemType.Chip;
                 }
                 else
                 {
@@ -113,9 +118,24 @@ public class GameManagement : MonoBehaviour
 
     public void EndGameDisplay()
     {
-        Debug.Log("End game");
+        //Debug.Log("End game");
         endGamePanel.SetActive(true);
 
         //board.currentState = GameState.lose;
+    }
+
+    public void DisplayHints()
+    {
+        //Debug.Log("DisplayHints");
+        for (int i = 0; i < board.width; i++)
+        {
+            for (int j = 0; j < board.height; j++)
+            {
+                if (ItemMap[i, j] != ItemType.None)
+                {
+                    board.rockTiles[i, j].DisplaySpecialRock();
+                }
+            }
+        }
     }
 }

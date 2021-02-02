@@ -26,7 +26,7 @@ public class Board : MonoBehaviour
     public GameObject[] dots; // A list of dot prefabs
     public GameObject[,] allDots; //
 
-    private BackgroundTile[,] rockTiles;
+    public BackgroundTile[,] rockTiles;
     public int rockTileCount = 48;
 
     public float refillDelay = 0.5f;

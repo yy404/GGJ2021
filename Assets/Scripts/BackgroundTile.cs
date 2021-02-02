@@ -20,8 +20,17 @@ public class BackgroundTile : MonoBehaviour
     void Start()
     {
         spriteRend = GetComponent<SpriteRenderer>();
-        spriteRend.sprite = specialRock;
+        //spriteRend.sprite = specialRock;
         gameManagement = FindObjectOfType<GameManagement>();
+
+        if (gameManagement.ItemMap[column, row] != ItemType.None)
+        {
+            hitPoints = 2;
+        }
+        else
+        {
+            hitPoints = 1;
+        }
     }
 
     // Update is called once per frame
@@ -32,6 +41,10 @@ public class BackgroundTile : MonoBehaviour
             if (gameManagement.ItemMap[column, row] == ItemType.Ship)
             {
                 gameManagement.SetGameEnd();
+            }
+            else if (gameManagement.ItemMap[column, row] == ItemType.Chip)
+            {
+                gameManagement.DisplayHints();
             }
             Destroy(this.gameObject);
         }
@@ -52,13 +65,16 @@ public class BackgroundTile : MonoBehaviour
     {
         TakeDamage(1);
 
-        if (gameManagement.ItemMap[column, row] == ItemType.Box)
+        if ((hitPoints == 1) && (gameManagement.ItemMap[column, row] != ItemType.None))
         {
             spriteRend.sprite = box;
-            hitPoints += 1;
-            gameManagement.ItemMap[column, row] = ItemType.Ship;
         }
 
         Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void DisplaySpecialRock()
+    {
+        spriteRend.sprite = specialRock;
     }
 }
