@@ -42,6 +42,8 @@ public class BackgroundTile : MonoBehaviour
     {
         if (hitPoints <= 0)
         {
+            gameManagement.DisplayLogText(gameManagement.msgMap[column, row]); // need to be before SetGameEnd()
+
             if (gameManagement.ItemMap[column, row] == ItemType.Ship)
             {
                 gameManagement.SetGameEnd();
@@ -55,8 +57,6 @@ public class BackgroundTile : MonoBehaviour
                 Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
                 gameManagement.DisplayRadar();
             }
-
-            gameManagement.DisplayLogText(gameManagement.msgMap[column, row]);
 
             Destroy(this.gameObject);
         }
@@ -75,6 +75,9 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseUp()
     {
+        gameManagement.IncreaseDay();
+        gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
+
         TakeDamage(1);
 
         if ((hitPoints == 1) && (gameManagement.ItemMap[column, row] != ItemType.None))

@@ -74,7 +74,7 @@ public class GameManagement : MonoBehaviour
         if (endGame == false)
         {
             oxygenText.text = "O2: " + currOxygen;
-            dayText.text = "Day " + currDay;
+            dayText.text = "Day: " + currDay;
         }
 
         if (Input.GetKey("escape"))
@@ -92,9 +92,11 @@ public class GameManagement : MonoBehaviour
         }
         if (currOxygen <= 0)
         {
-            endGame = true;
+            currOxygen = 0;
             oxygenText.text = "O2: " + currOxygen;
-            dialogueText.text = "I END my journey because of no Oxygen..." + "\n(May I have a different ending next time?)";
+
+            DisplayLogText("I have consumed all my oxygen… If I could have the change to do it again, I would collect oxygen first."); // need to be before SetGameEnd()
+            SetGameEnd();
         }
     }
 
@@ -121,7 +123,10 @@ public class GameManagement : MonoBehaviour
 
     public void DisplayLogText(string displayText)
     {
-        logText.text = displayText;
+        if (!endGame)
+        {
+            logText.text = displayText;
+        }
     }
 
     private void SetupItemMap()

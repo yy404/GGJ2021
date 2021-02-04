@@ -117,8 +117,8 @@ public class Dot : MonoBehaviour
             // Debug.Log(swipeAngle);
             MovePieces();
 
-            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
             gameManagement.IncreaseDay();
+            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
         }
         else
         {
