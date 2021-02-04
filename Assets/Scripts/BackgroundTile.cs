@@ -7,6 +7,7 @@ public class BackgroundTile : MonoBehaviour
     public int hitPoints;
     public Sprite specialRock;
     public Sprite box;
+    public Texture2D cursorTextureOver;
     public Texture2D cursorTextureDown;
     public Texture2D cursorTextureUp;
     public GameObject chipParticle;
@@ -32,6 +33,8 @@ public class BackgroundTile : MonoBehaviour
         {
             hitPoints = 1;
         }
+
+        spriteRend.material.color = Color.black;
     }
 
     // Update is called once per frame
@@ -79,6 +82,18 @@ public class BackgroundTile : MonoBehaviour
             spriteRend.sprite = box;
         }
 
+        Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
+    }
+
+    private void OnMouseEnter()
+    {
+        spriteRend.material.color = Color.white;
+        Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto);
+    }
+
+    private void OnMouseExit()
+    {
+        spriteRend.material.color = Color.black;
         Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
     }
 

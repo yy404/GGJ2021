@@ -1644,6 +1644,10 @@ MonoBehaviour:
     it\u2019s too late\u2026 This planet has been seriously polluted and we are going
     to die here."
   - Blueprint?
+  introMsg: 'What happened? Oh, now I remember, my spaceship was hit by a meteorite.
+    It seems I survived, but where am I? OK, let me see what I can find here. '
+  endMsg: I have no idea what happened, but I found a brand new spaceship. I am ready
+    for the new Journey!
 --- !u!1 &1486602214
 GameObject:
   m_ObjectHideFlags: 0
