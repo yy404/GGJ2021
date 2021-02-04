@@ -6,8 +6,11 @@ using UnityEngine.UI;
 public enum ItemType
 {
     Box,
+    //Blueprint,
     Chip,
+    //Seed,
     Ship,
+    Radar,
     None,
 }
 
@@ -24,6 +27,8 @@ public class GameManagement : MonoBehaviour
     public GameObject endGamePanel;
 
     public ItemType[,] ItemMap;
+    public int[] seqArray;
+    public int itemNum = 0;
 
     private Board board;
     private int currOxygen;
@@ -37,8 +42,18 @@ public class GameManagement : MonoBehaviour
         board = FindObjectOfType<Board>();
 
         ItemMap = new ItemType[board.width, board.height];
-        SetupItemMap();
 
+        // Initialise a sequence array
+        seqArray = new int[board.width * board.height];
+        for (int i = 0; i < seqArray.Length; i++)
+        {
+            seqArray[i] = i;
+        }
+
+        ShuffleSeqArray();
+        SetupItemMap(); // need to be after sequence array initialisation and shuffling
+
+        // Initialise stats
         currOxygen = maxOxygen;
         currDay = 0;
     }
@@ -96,27 +111,32 @@ public class GameManagement : MonoBehaviour
 
     private void SetupItemMap()
     {
-        int shipSeq = Random.Range(0, board.width * board.height);
-        int shipX = shipSeq % board.width;
-        int shipY = shipSeq / board.width;
 
+        // initialise item map
         for (int i = 0; i < board.width; i++)
         {
             for (int j = 0; j < board.height; j++)
             {
-                if ((i == 0) && (j == 0))
-                {
-                    ItemMap[i, j] = ItemType.Chip;
-                }
-                else if ((i == shipX) && (j == shipY))
-                {
-                    ItemMap[i, j] = ItemType.Ship;
-                }
-                else
-                {
-                    ItemMap[i, j] = ItemType.None;
-                }
+                ItemMap[i, j] = ItemType.None;
             }
+        }
+
+        // adding radar(s)
+        for (int i = 0; i < 1; i++)
+        {
+            AddItemToMap(ItemType.Radar);
+        }
+
+        // adding ship(s)
+        for (int i = 0; i < 1; i++)
+        {
+            AddItemToMap(ItemType.Ship);
+        }
+
+        // adding chips
+        for (int i = 0; i < 6; i++)
+        {
+            AddItemToMap(ItemType.Chip);
         }
     }
 
@@ -128,7 +148,7 @@ public class GameManagement : MonoBehaviour
         //board.currentState = GameState.lose;
     }
 
-    public void DisplayHints()
+    public void DisplayRadar()
     {
         //Debug.Log("DisplayHints");
         for (int i = 0; i < board.width; i++)
@@ -140,6 +160,37 @@ public class GameManagement : MonoBehaviour
                     board.rockTiles[i, j].DisplaySpecialRock();
                 }
             }
+        }
+    }
+
+    private void ShuffleSeqArray()
+    {
+        // Shuffle the array
+        for (int i = 0; i < seqArray.Length; i++)
+        {
+            int temp = seqArray[i];
+            int randomIndex = Random.Range(i, seqArray.Length);
+            seqArray[i] = seqArray[randomIndex];
+            seqArray[randomIndex] = temp;
+        }
+    }
+
+    private void AddItemToMap(ItemType itemType)
+    {
+        // Check if any space to add item
+        if (itemNum < seqArray.Length)
+        {
+            // Add the item
+            int currSeqVal = seqArray[itemNum];
+            int currX = currSeqVal % board.width;
+            int currY = currSeqVal / board.width;
+            ItemMap[currX, currY] = itemType;
+            itemNum++;
+        }
+        else
+        {
+            Debug.Log("Added too many items");
+            itemNum = 0;
         }
     }
 }

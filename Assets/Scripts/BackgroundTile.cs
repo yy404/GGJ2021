@@ -42,9 +42,9 @@ public class BackgroundTile : MonoBehaviour
             {
                 gameManagement.SetGameEnd();
             }
-            else if (gameManagement.ItemMap[column, row] == ItemType.Chip)
+            else if (gameManagement.ItemMap[column, row] == ItemType.Radar)
             {
-                gameManagement.DisplayHints();
+                gameManagement.DisplayRadar();
             }
             Destroy(this.gameObject);
         }
