@@ -9,6 +9,7 @@ public class BackgroundTile : MonoBehaviour
     public Sprite box;
     public Texture2D cursorTextureDown;
     public Texture2D cursorTextureUp;
+    public GameObject chipParticle;
 
     public int column; //x
     public int row; //y
@@ -42,8 +43,13 @@ public class BackgroundTile : MonoBehaviour
             {
                 gameManagement.SetGameEnd();
             }
+            else if (gameManagement.ItemMap[column, row] == ItemType.Chip)
+            {
+                Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
+            }
             else if (gameManagement.ItemMap[column, row] == ItemType.Radar)
             {
+                Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
                 gameManagement.DisplayRadar();
             }
             Destroy(this.gameObject);
@@ -75,6 +81,9 @@ public class BackgroundTile : MonoBehaviour
 
     public void DisplaySpecialRock()
     {
-        spriteRend.sprite = specialRock;
+        if (spriteRend.sprite != box)
+        {
+            spriteRend.sprite = specialRock;
+        }
     }
 }

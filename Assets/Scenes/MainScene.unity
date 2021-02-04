@@ -1624,6 +1624,8 @@ MonoBehaviour:
   maxOxygen: 100
   oxygenDailyConsumption: 5
   endGamePanel: {fileID: 287355019}
+  seqArray: 
+  itemNum: 0
 --- !u!1 &1486602214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1873,8 +1875,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6feccd1c9d609df4c9ab00ffd6ef4d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startButton: {fileID: 0}
-  exitButton: {fileID: 0}
 --- !u!1 &1540451912
 GameObject:
   m_ObjectHideFlags: 0
@@ -2715,8 +2715,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6feccd1c9d609df4c9ab00ffd6ef4d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startButton: {fileID: 0}
-  exitButton: {fileID: 0}
 --- !u!1 &2022210592
 GameObject:
   m_ObjectHideFlags: 0
