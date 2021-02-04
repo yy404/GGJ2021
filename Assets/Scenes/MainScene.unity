@@ -1626,6 +1626,24 @@ MonoBehaviour:
   endGamePanel: {fileID: 287355019}
   seqArray: 
   itemNum: 0
+  chipMsg:
+  - 'A new message from Lily: In order to stay alive on this planet, XX oxygen is
+    essential everyday. Unfortunately, I consumed all my oxygen and lay at rest here.
+    Good luck to you!'
+  - "A new message from Henry: It\u2019s difficult to stay alive on this planet.
+    I just realized I could only move once per day."
+  - 'A new message from Diva: This planet was heavily polluted. If I cleared enough
+    pollutants, is it possible for this planet to be a place to live?'
+  - 'A new message from Raddle: If more seeds are found in this planet, is it possible
+    for this planet to be a place to live?'
+  - 'A new message from an old book: A splendid civilization was born on this ancient
+    and magical planet. '
+  - 'A new message from an old book: This planet used to be full of vitality and
+    new hope. '
+  - "A new message from an old book: I hope we could protect the environment, but
+    it\u2019s too late\u2026 This planet has been seriously polluted and we are going
+    to die here."
+  - Blueprint?
 --- !u!1 &1486602214
 GameObject:
   m_ObjectHideFlags: 0

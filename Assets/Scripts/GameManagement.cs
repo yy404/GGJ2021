@@ -29,6 +29,12 @@ public class GameManagement : MonoBehaviour
     public ItemType[,] ItemMap;
     public int[] seqArray;
     public int itemNum = 0;
+    private int chipNum;
+
+    public string[,] msgMap;
+    public string[] chipMsg;
+    public string introMsg;
+    public string endMsg;
 
     private Board board;
     private int currOxygen;
@@ -42,6 +48,8 @@ public class GameManagement : MonoBehaviour
         board = FindObjectOfType<Board>();
 
         ItemMap = new ItemType[board.width, board.height];
+        msgMap = new string[board.width, board.height];
+        chipNum = chipMsg.Length;
 
         // Initialise a sequence array
         seqArray = new int[board.width * board.height];
@@ -56,6 +64,8 @@ public class GameManagement : MonoBehaviour
         // Initialise stats
         currOxygen = maxOxygen;
         currDay = 0;
+
+        DisplayLogText(introMsg);
     }
 
     // Update is called once per frame
@@ -109,6 +119,11 @@ public class GameManagement : MonoBehaviour
         dialogueText.text = displayText;
     }
 
+    public void DisplayLogText(string displayText)
+    {
+        logText.text = displayText;
+    }
+
     private void SetupItemMap()
     {
 
@@ -118,31 +133,33 @@ public class GameManagement : MonoBehaviour
             for (int j = 0; j < board.height; j++)
             {
                 ItemMap[i, j] = ItemType.None;
+                msgMap[i, j] = "Nothing special.";
             }
         }
 
         // adding radar(s)
         for (int i = 0; i < 1; i++)
         {
-            AddItemToMap(ItemType.Radar);
+            AddItemToMap(ItemType.Radar, "Found a map of secrets.");
         }
 
         // adding ship(s)
         for (int i = 0; i < 1; i++)
         {
-            AddItemToMap(ItemType.Ship);
+            AddItemToMap(ItemType.Ship, endMsg);
         }
 
         // adding chips
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < chipNum; i++)
         {
-            AddItemToMap(ItemType.Chip);
+            AddItemToMap(ItemType.Chip, chipMsg[i]);
         }
     }
 
     public void EndGameDisplay()
     {
         //Debug.Log("End game");
+
         endGamePanel.SetActive(true);
 
         //board.currentState = GameState.lose;
@@ -157,7 +174,15 @@ public class GameManagement : MonoBehaviour
             {
                 if (ItemMap[i, j] != ItemType.None)
                 {
-                    board.rockTiles[i, j].DisplaySpecialRock();
+                    if (board.rockTiles[i, j] != null )
+                    {
+                        board.rockTiles[i, j].DisplaySpecialRock();
+                    }
+                    else
+                    {
+                        //string debugMsg = string.Format("Null tile ({0},{1})", i, j);
+                        //Debug.Log(debugMsg);
+                    }
                 }
             }
         }
@@ -175,7 +200,7 @@ public class GameManagement : MonoBehaviour
         }
     }
 
-    private void AddItemToMap(ItemType itemType)
+    private void AddItemToMap(ItemType itemType, string thisMsg = "")
     {
         // Check if any space to add item
         if (itemNum < seqArray.Length)
@@ -185,6 +210,7 @@ public class GameManagement : MonoBehaviour
             int currX = currSeqVal % board.width;
             int currY = currSeqVal / board.width;
             ItemMap[currX, currY] = itemType;
+            msgMap[currX, currY] = thisMsg;
             itemNum++;
         }
         else

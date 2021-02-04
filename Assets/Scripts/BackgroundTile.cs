@@ -52,6 +52,9 @@ public class BackgroundTile : MonoBehaviour
                 Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
                 gameManagement.DisplayRadar();
             }
+
+            gameManagement.DisplayLogText(gameManagement.msgMap[column, row]);
+
             Destroy(this.gameObject);
         }
     }
