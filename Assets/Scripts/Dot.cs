@@ -79,15 +79,17 @@ public class Dot : MonoBehaviour
     // This is for testing and Debug only.
     private void OnMouseOver()
     {
-        gameManagement.DisplayDialogueText("Drag to swap");
+        gameManagement.DisplayDialogueText("Clicking");
     }
 
     private void OnMouseDown()
     {
         if (board.currentState == GameState.move)
         {
-            firstTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //Debug.Log(firstTouchPosition);
+            //firstTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            ////Debug.Log(firstTouchPosition);
+
+            isMatched = true;
         }
 
     }
@@ -96,11 +98,16 @@ public class Dot : MonoBehaviour
     {
         if (board.currentState == GameState.move)
         {
-            finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (gameManagement.CheckIfGameEnd() == false)
-            {
-                CalculateAngle(); // and may move pieces
-            }
+            //finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //if (gameManagement.CheckIfGameEnd() == false)
+            //{
+            //    CalculateAngle(); // and may move pieces
+            //}
+
+            board.DestroyMatches();
+
+            gameManagement.IncreaseDay();
+            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
         }
     }
 

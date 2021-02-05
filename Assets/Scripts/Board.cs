@@ -26,8 +26,12 @@ public class Board : MonoBehaviour
     public GameObject[] dots; // A list of dot prefabs
     public GameObject[,] allDots; //
 
+    public GameObject spriteParticle;
+
     public BackgroundTile[,] rockTiles;
     public int rockTileCount = 48;
+
+    public int initFreeRowNum = 2; // initial available rows for filling
 
     public float refillDelay = 0.5f;
 
@@ -151,18 +155,31 @@ public class Board : MonoBehaviour
     {
         if (allDots[column, row].GetComponent<Dot>().isMatched)
         {
-
-            DamageRock(column, row);
+            if (findMatches.currentMatches.Count > 1) // more than one tile marked as matches
+            {
+                DamageRock(column, row);
+            }
 
             if (allDots[column, row].tag == "TileOxygen")
             {
                 gameManagement.ConsumeOxygen(-3); // add 3
+            }
+            else if (allDots[column, row].tag == "TileWaste")
+            {
+                gameManagement.ConsumeOxygen(2);
             }
 
             if (soundManagement != null)
             {
                 soundManagement.PlayRandomDestroyNoise();
             }
+
+            //sound
+
+            // particle 
+            GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[column, row].transform.position, Quaternion.identity);
+            var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
+            textureSheetAnimation.AddSprite(allDots[column, row].GetComponent<SpriteRenderer>().sprite);
 
             Destroy(allDots[column, row]);
             allDots[column, row] = null;
@@ -436,7 +453,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 //if ((i > 3) || (j < 4))
-                if (j < height - 1) // leave one line above
+                if (j < height - initFreeRowNum) // leave x line(s) above
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     GameObject tile = Instantiate(rockTilePrefab, tempPosition, Quaternion.identity);
