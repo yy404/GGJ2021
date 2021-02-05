@@ -436,6 +436,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 //if ((i > 3) || (j < 4))
+                if (j < height - 1) // leave one line above
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     GameObject tile = Instantiate(rockTilePrefab, tempPosition, Quaternion.identity);

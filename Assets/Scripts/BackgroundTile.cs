@@ -77,7 +77,14 @@ public class BackgroundTile : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        hitPoints -= damage;
+        if (spriteRend.material.color == Color.black)
+        {
+            spriteRend.material.color = Color.white;
+        }
+        else
+        {
+            hitPoints -= damage;
+        }
     }
 
     private void OnMouseDown()
@@ -91,13 +98,12 @@ public class BackgroundTile : MonoBehaviour
         gameManagement.IncreaseDay();
         gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
 
-        TakeDamage(1);
-
         if (soundManagement != null)
         {
             soundManagement.PlayRandomDestroyNoise();
         }
 
+        TakeDamage(1);
         if ((hitPoints == 1) && (gameManagement.ItemMap[column, row] != ItemType.None))
         {
             spriteRend.sprite = box;
@@ -110,7 +116,7 @@ public class BackgroundTile : MonoBehaviour
     {
         if (spriteRend != null)
         {
-            spriteRend.material.color = Color.white;
+            //spriteRend.material.color = Color.white;
             Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto); // don't change cursor
         }
     }
@@ -119,7 +125,7 @@ public class BackgroundTile : MonoBehaviour
     {
         if (spriteRend != null)
         {
-            spriteRend.material.color = Color.black;
+            //spriteRend.material.color = Color.black;
         }
         Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto); // reset to default cursor
     }
