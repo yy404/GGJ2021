@@ -40,12 +40,15 @@ public class GameManagement : MonoBehaviour
     private int currOxygen;
     private int currDay;
 
+    private SoundManagement soundManagement;
+
     private bool endGame = false;
 
     // Start is called before the first frame update
     void Start()
     {
         board = FindObjectOfType<Board>();
+        soundManagement = FindObjectOfType<SoundManagement>();
 
         ItemMap = new ItemType[board.width, board.height];
         msgMap = new string[board.width, board.height];
@@ -97,6 +100,7 @@ public class GameManagement : MonoBehaviour
 
             DisplayLogText("I have consumed all my oxygen… If I could have the change to do it again, I would collect oxygen first."); // need to be before SetGameEnd()
             SetGameEnd();
+            soundManagement.PlayRandomLoseSound();
         }
     }
 
@@ -109,6 +113,7 @@ public class GameManagement : MonoBehaviour
     {
         endGame = true;
         EndGameDisplay();
+        soundManagement.DisableBGM();
     }
 
     public bool CheckIfGameEnd()

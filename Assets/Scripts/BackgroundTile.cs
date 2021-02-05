@@ -17,6 +17,7 @@ public class BackgroundTile : MonoBehaviour
 
     private SpriteRenderer spriteRend;
     private GameManagement gameManagement;
+    private SoundManagement soundManagement;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,7 @@ public class BackgroundTile : MonoBehaviour
         spriteRend = GetComponent<SpriteRenderer>();
         //spriteRend.sprite = specialRock;
         gameManagement = FindObjectOfType<GameManagement>();
+        soundManagement = FindObjectOfType<SoundManagement>();
 
         if (gameManagement.ItemMap[column, row] != ItemType.None)
         {
@@ -47,15 +49,26 @@ public class BackgroundTile : MonoBehaviour
             if (gameManagement.ItemMap[column, row] == ItemType.Ship)
             {
                 gameManagement.SetGameEnd();
+                soundManagement.PlayRandomWinSound();
             }
             else if (gameManagement.ItemMap[column, row] == ItemType.Chip)
             {
                 Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
+
+                if (soundManagement != null)
+                {
+                    soundManagement.PlayRandomPickupNoise();
+                }
             }
             else if (gameManagement.ItemMap[column, row] == ItemType.Radar)
             {
                 Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
                 gameManagement.DisplayRadar();
+
+                if (soundManagement != null)
+                {
+                    soundManagement.PlayRandomPickupNoise();
+                }
             }
 
             Destroy(this.gameObject);
@@ -80,6 +93,11 @@ public class BackgroundTile : MonoBehaviour
 
         TakeDamage(1);
 
+        if (soundManagement != null)
+        {
+            soundManagement.PlayRandomDestroyNoise();
+        }
+
         if ((hitPoints == 1) && (gameManagement.ItemMap[column, row] != ItemType.None))
         {
             spriteRend.sprite = box;
@@ -90,14 +108,20 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        spriteRend.material.color = Color.white;
-        Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto);
+        if (spriteRend != null)
+        {
+            spriteRend.material.color = Color.white;
+            Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto); // don't change cursor
+        }
     }
 
     private void OnMouseExit()
     {
-        spriteRend.material.color = Color.black;
-        Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
+        if (spriteRend != null)
+        {
+            spriteRend.material.color = Color.black;
+        }
+        Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto); // reset to default cursor
     }
 
     public void DisplaySpecialRock()
