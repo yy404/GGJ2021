@@ -561,6 +561,42 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void MarkRock(int column, int row)
+    {
+        if (column > 0)
+        {
+            if (rockTiles[column - 1, row])
+            {
+                rockTiles[column - 1, row].marked = true;
+                //rockTiles[column - 1, row].spriteRend.material.color = Color.blue;
+            }
+        }
+        if (column < width - 1)
+        {
+            if (rockTiles[column + 1, row])
+            {
+                rockTiles[column + 1, row].marked = true;
+                //rockTiles[column + 1, row].spriteRend.material.color = Color.blue;
+            }
+        }
+        if (row > 0)
+        {
+            if (rockTiles[column, row - 1])
+            {
+                rockTiles[column, row - 1].marked = true;
+                //rockTiles[column, row - 1].spriteRend.material.color = Color.blue;
+            }
+        }
+        if (row < height - 1)
+        {
+            if (rockTiles[column, row + 1])
+            {
+                rockTiles[column, row + 1].marked = true;
+                //rockTiles[column, row + 1].spriteRend.material.color = Color.blue;
+            }
+        }
+    }
+
     private void UpdateDepth(int thisDepth)
     {
         currDepth = Mathf.Max(currDepth, thisDepth);
@@ -693,6 +729,21 @@ public class Board : MonoBehaviour
                 {
                     allDots[i, j].GetComponent<Dot>().marked = false;
                     allDots[i, j].GetComponent<Dot>().spriteRend.material.color = Color.white;
+                }
+            }
+        }
+    }
+
+    public void ClearRockMark()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (rockTiles[i, j] != null)
+                {
+                    rockTiles[i, j].marked = false;
+                    //rockTiles[i, j].spriteRend.material.color = Color.white;
                 }
             }
         }

@@ -15,10 +15,12 @@ public class BackgroundTile : MonoBehaviour
     public int column; //x
     public int row; //y
 
-    private SpriteRenderer spriteRend;
+    public SpriteRenderer spriteRend;
     private GameManagement gameManagement;
     private SoundManagement soundManagement;
     private Board board;
+
+    public bool marked = false;
 
     // Start is called before the first frame update
     void Start()

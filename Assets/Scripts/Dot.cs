@@ -124,6 +124,7 @@ public class Dot : MonoBehaviour
     private void OnMouseExit()
     {
         board.ClearDotMark();
+        board.ClearRockMark();
     }
 
     void CalculateAngle()
@@ -225,6 +226,8 @@ public class Dot : MonoBehaviour
     public void MarkIt(string thisTag)
     {
         spriteRend.material.color = Color.yellow;
+        board.MarkRock(column, row);
+
         if (column > 0)
         {
             // board.allDots[column - 1, row]
