@@ -493,6 +493,8 @@ MonoBehaviour:
   currDepth: 0
   refillDelay: 0.5
   currentState: 1
+  itemNum: 0
+  seqArray: 
 --- !u!1 &391359214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1883,10 +1885,10 @@ MonoBehaviour:
   dialogueText: {fileID: 212181659}
   logText: {fileID: 1897933084}
   maxOxygen: 100
-  oxygenDailyConsumption: 5
+  oxygenDailyConsumption: 3
   endGamePanel: {fileID: 287355019}
-  seqArray: 
-  itemNum: 0
+  chipNum: 0
+  enableClickRock: 0
   chipMsg:
   - 'A new message from Lily: In order to stay alive on this planet, XX oxygen is
     essential everyday. Unfortunately, I consumed all my oxygen and lay at rest here.

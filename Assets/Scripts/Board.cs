@@ -16,6 +16,17 @@ public enum TileKind
     Normal,
 }
 
+public enum ItemType
+{
+    Box,
+    //Blueprint,
+    Chip,
+    //Seed,
+    Ship,
+    Radar,
+    None,
+}
+
 public class Board : MonoBehaviour
 {
     public int width;
@@ -42,6 +53,11 @@ public class Board : MonoBehaviour
     private GameManagement gameManagement;
     private SoundManagement soundManagement;
 
+    public int itemNum = 0;
+    public int[] seqArray;
+    public ItemType[,] ItemMap;
+    public string[,] msgMap;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +67,11 @@ public class Board : MonoBehaviour
 
         allDots = new GameObject[width, height];
         rockTiles = new BackgroundTile[width, height];
+
+        ItemMap = new ItemType[width, height];
+        msgMap = new string[width, height];
+
+        seqArray = new int[width * height];
 
         currDepth = initFreeRowNum;
 
@@ -105,6 +126,15 @@ public class Board : MonoBehaviour
                 }
             }
         }
+
+        // Initialise a sequence array
+        for (int i = 0; i < seqArray.Length; i++)
+        {
+            seqArray[i] = i;
+        }
+        ShuffleSeqArray();
+
+        SetupItemMap(); // need to be after sequence array initialisation and shuffling
     }
 
     // Check if a type of dot at (col,row) has any match
@@ -535,8 +565,121 @@ public class Board : MonoBehaviour
     {
         currDepth = Mathf.Max(currDepth, thisDepth);
     }
+
     private int CalTileTypeNum()
     {
         return currDepth + 1;
+    }
+
+    private void ShuffleSeqArray()
+    {
+        // Shuffle the array
+        for (int i = 0; i < seqArray.Length; i++)
+        {
+            int temp = seqArray[i];
+            int randomIndex = Random.Range(i, seqArray.Length);
+            seqArray[i] = seqArray[randomIndex];
+            seqArray[randomIndex] = temp;
+        }
+    }
+
+    private void AddItemToMap(ItemType itemType, string thisMsg = "")
+    {
+        // Check if any space to add item
+        if (itemNum < seqArray.Length)
+        {
+            int currSeqVal = seqArray[itemNum];
+            int currX = currSeqVal % width;
+            int currY = currSeqVal / width;
+
+            // Until find a valid rock tile
+            while (rockTiles[currX, currY] == null)
+            {
+                itemNum++;
+                if (itemNum >= seqArray.Length)
+                {
+                    // out of range
+                    break;
+                }
+
+                currSeqVal = seqArray[itemNum];
+                currX = currSeqVal % width;
+                currY = currSeqVal / width;
+            }
+
+            // still within the range?
+            if (itemNum < seqArray.Length)
+            {
+                // Add the item
+                ItemMap[currX, currY] = itemType;
+                msgMap[currX, currY] = thisMsg;
+                itemNum++;
+            }
+            else
+            {
+                Debug.Log("Added too many items");
+                itemNum = 0;
+            }
+        }
+        else
+        {
+            Debug.Log("Added too many items");
+            itemNum = 0;
+        }
+    }
+
+    private void SetupItemMap()
+    {
+
+        // initialise item map
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                ItemMap[i, j] = ItemType.None;
+                msgMap[i, j] = "Nothing special.";
+            }
+        }
+
+        // adding radar(s)
+        for (int i = 0; i < 1; i++)
+        {
+            AddItemToMap(ItemType.Radar, "Found a map of secrets.");
+        }
+
+        // adding ship(s)
+        for (int i = 0; i < 1; i++)
+        {
+            AddItemToMap(ItemType.Ship, gameManagement.endMsg);
+        }
+
+        // adding chips
+        for (int i = 0; i < gameManagement.chipNum; i++)
+        {
+            AddItemToMap(ItemType.Chip, gameManagement.chipMsg[i]);
+        }
+    }
+
+    public void DisplayRadar()
+    {
+        //Debug.Log("DisplayHints");
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (ItemMap[i, j] != ItemType.None)
+                {
+                    if (rockTiles[i, j] != null)
+                    {
+                        rockTiles[i, j].DisplaySpecialRock();
+                    }
+                    else
+                    {
+                        //string debugMsg = string.Format("Null tile ({0},{1})", i, j);
+                        //Debug.Log(debugMsg);
+                    }
+                }
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@ public class BackgroundTile : MonoBehaviour
     private SpriteRenderer spriteRend;
     private GameManagement gameManagement;
     private SoundManagement soundManagement;
+    private Board board;
 
     // Start is called before the first frame update
     void Start()
@@ -26,8 +27,9 @@ public class BackgroundTile : MonoBehaviour
         //spriteRend.sprite = specialRock;
         gameManagement = FindObjectOfType<GameManagement>();
         soundManagement = FindObjectOfType<SoundManagement>();
+        board = FindObjectOfType<Board>();
 
-        if (gameManagement.ItemMap[column, row] != ItemType.None)
+        if (board.ItemMap[column, row] != ItemType.None)
         {
             hitPoints = 2;
         }
@@ -44,14 +46,14 @@ public class BackgroundTile : MonoBehaviour
     {
         if (hitPoints <= 0)
         {
-            gameManagement.DisplayLogText(gameManagement.msgMap[column, row]); // need to be before SetGameEnd()
+            gameManagement.DisplayLogText(board.msgMap[column, row]); // need to be before SetGameEnd()
 
-            if (gameManagement.ItemMap[column, row] == ItemType.Ship)
+            if (board.ItemMap[column, row] == ItemType.Ship)
             {
                 gameManagement.SetGameEnd();
                 soundManagement.PlayRandomWinSound();
             }
-            else if (gameManagement.ItemMap[column, row] == ItemType.Chip)
+            else if (board.ItemMap[column, row] == ItemType.Chip)
             {
                 Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
 
@@ -60,10 +62,10 @@ public class BackgroundTile : MonoBehaviour
                     soundManagement.PlayRandomPickupNoise();
                 }
             }
-            else if (gameManagement.ItemMap[column, row] == ItemType.Radar)
+            else if (board.ItemMap[column, row] == ItemType.Radar)
             {
                 Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
-                gameManagement.DisplayRadar();
+                board.DisplayRadar();
 
                 if (soundManagement != null)
                 {
@@ -89,7 +91,7 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (gameManagement.enableClickRock)
+        if (gameManagement != null && gameManagement.enableClickRock)
         {
             Cursor.SetCursor(cursorTextureDown, Vector2.zero, CursorMode.Auto);
             // play sound
@@ -98,7 +100,7 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (gameManagement.enableClickRock)
+        if (gameManagement != null && gameManagement.enableClickRock)
         {
             gameManagement.IncreaseDay();
             gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
@@ -109,7 +111,7 @@ public class BackgroundTile : MonoBehaviour
             }
 
             TakeDamage(1);
-            if ((hitPoints == 1) && (gameManagement.ItemMap[column, row] != ItemType.None))
+            if ((hitPoints == 1) && (board.ItemMap[column, row] != ItemType.None))
             {
                 spriteRend.sprite = box;
             }
@@ -120,7 +122,7 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (gameManagement.enableClickRock)
+        if (gameManagement != null && gameManagement.enableClickRock)
         {
             if (spriteRend != null)
             {
@@ -132,7 +134,7 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseExit()
     {
-        if (gameManagement.enableClickRock)
+        if (gameManagement != null && gameManagement.enableClickRock)
         {
             if (spriteRend != null)
             {
