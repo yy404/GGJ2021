@@ -31,6 +31,8 @@ public class GameManagement : MonoBehaviour
     public int itemNum = 0;
     private int chipNum;
 
+    public bool enableClickRock = false;
+
     public string[,] msgMap;
     public string[] chipMsg;
     public string introMsg;

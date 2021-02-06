@@ -89,45 +89,57 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Cursor.SetCursor(cursorTextureDown, Vector2.zero, CursorMode.Auto);
-        // play sound
+        if (gameManagement.enableClickRock)
+        {
+            Cursor.SetCursor(cursorTextureDown, Vector2.zero, CursorMode.Auto);
+            // play sound
+        }
     }
 
     private void OnMouseUp()
     {
-        gameManagement.IncreaseDay();
-        gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
-
-        if (soundManagement != null)
+        if (gameManagement.enableClickRock)
         {
-            soundManagement.PlayRandomDestroyNoise();
-        }
+            gameManagement.IncreaseDay();
+            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
 
-        TakeDamage(1);
-        if ((hitPoints == 1) && (gameManagement.ItemMap[column, row] != ItemType.None))
-        {
-            spriteRend.sprite = box;
-        }
+            if (soundManagement != null)
+            {
+                soundManagement.PlayRandomDestroyNoise();
+            }
 
-        Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
+            TakeDamage(1);
+            if ((hitPoints == 1) && (gameManagement.ItemMap[column, row] != ItemType.None))
+            {
+                spriteRend.sprite = box;
+            }
+
+            Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
+        }
     }
 
     private void OnMouseEnter()
     {
-        if (spriteRend != null)
+        if (gameManagement.enableClickRock)
         {
-            //spriteRend.material.color = Color.white;
-            Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto); // don't change cursor
+            if (spriteRend != null)
+            {
+                //spriteRend.material.color = Color.white;
+                Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto); // don't change cursor
+            }
         }
     }
 
     private void OnMouseExit()
     {
-        if (spriteRend != null)
+        if (gameManagement.enableClickRock)
         {
-            //spriteRend.material.color = Color.black;
+            if (spriteRend != null)
+            {
+                //spriteRend.material.color = Color.black;
+            }
+            Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto); // reset to default cursor
         }
-        Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto); // reset to default cursor
     }
 
     public void DisplaySpecialRock()
