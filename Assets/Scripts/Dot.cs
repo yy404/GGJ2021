@@ -23,12 +23,16 @@ public class Dot : MonoBehaviour
     public float swipeAngle = 0;
     public float swipeResist = 1f;
 
+    public bool marked = false;
+    public SpriteRenderer spriteRend;
+
     // Start is called before the first frame update
     void Start()
     {
         board = FindObjectOfType<Board>();
         findMatches = FindObjectOfType<FindMatches>();
         gameManagement = FindObjectOfType<GameManagement>();
+        spriteRend = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -109,6 +113,17 @@ public class Dot : MonoBehaviour
             gameManagement.IncreaseDay();
             gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
         }
+    }
+
+    private void OnMouseEnter()
+    {
+        marked = true;
+        MarkIt(this.tag);
+    }
+
+    private void OnMouseExit()
+    {
+        board.ClearDotMark();
     }
 
     void CalculateAngle()
@@ -205,5 +220,66 @@ public class Dot : MonoBehaviour
             //otherDot = null;
         }
 
+    }
+
+    public void MarkIt(string thisTag)
+    {
+        spriteRend.material.color = Color.yellow;
+        if (column > 0)
+        {
+            // board.allDots[column - 1, row]
+            GameObject theOtherDot = board.allDots[column - 1, row];
+            if (theOtherDot != null)
+            {
+                Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
+                if (!theOtherDotComp.marked && theOtherDotComp.tag == thisTag)
+                {
+                    theOtherDotComp.marked = true;
+                    theOtherDotComp.MarkIt(thisTag);
+                }
+            }
+        }
+        if (column < board.width - 1)
+        {
+            // board.allDots[column + 1, row]
+            GameObject theOtherDot = board.allDots[column + 1, row];
+            if (theOtherDot != null)
+            {
+                Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
+                if (!theOtherDotComp.marked && theOtherDotComp.tag == thisTag)
+                {
+                    theOtherDotComp.marked = true;
+                    theOtherDotComp.MarkIt(thisTag);
+                }
+            }
+        }
+        if (row > 0)
+        {
+            // board.allDots[column, row - 1]
+            GameObject theOtherDot = board.allDots[column, row - 1];
+            if (theOtherDot != null)
+            {
+                Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
+                if (!theOtherDotComp.marked && theOtherDotComp.tag == thisTag)
+                {
+                    theOtherDotComp.marked = true;
+                    theOtherDotComp.MarkIt(thisTag);
+                }
+            }
+        }
+        if (row < board.height - 1)
+        {
+            // board.allDots[column, row + 1]
+            GameObject theOtherDot = board.allDots[column, row + 1];
+            if (theOtherDot != null)
+            {
+                Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
+                if (!theOtherDotComp.marked && theOtherDotComp.tag == thisTag)
+                {
+                    theOtherDotComp.marked = true;
+                    theOtherDotComp.MarkIt(thisTag);
+                }
+            }
+        }
     }
 }

@@ -682,4 +682,19 @@ public class Board : MonoBehaviour
             }
         }
     }
+
+    public void ClearDotMark()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (allDots[i, j] != null)
+                {
+                    allDots[i, j].GetComponent<Dot>().marked = false;
+                    allDots[i, j].GetComponent<Dot>().spriteRend.material.color = Color.white;
+                }
+            }
+        }
+    }
 }
