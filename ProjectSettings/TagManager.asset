@@ -10,6 +10,7 @@ TagManager:
   - TileTool
   - TileEnergy
   - TileChip
+  - TileCrystal
   layers:
   - Default
   - TransparentFX

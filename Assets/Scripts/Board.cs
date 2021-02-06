@@ -32,6 +32,7 @@ public class Board : MonoBehaviour
     public int rockTileCount = 48;
 
     public int initFreeRowNum = 2; // initial available rows for filling
+    public int currDepth;
 
     public float refillDelay = 0.5f;
 
@@ -47,8 +48,12 @@ public class Board : MonoBehaviour
         findMatches = FindObjectOfType<FindMatches>();
         gameManagement = FindObjectOfType<GameManagement>();
         soundManagement = FindObjectOfType<SoundManagement>();
+
         allDots = new GameObject[width, height];
         rockTiles = new BackgroundTile[width, height];
+
+        currDepth = initFreeRowNum;
+
         SetUp();
     }
 
@@ -74,12 +79,14 @@ public class Board : MonoBehaviour
 
                 if (rockTiles[i,j] == null)
                 {
-                    // Choose a random type of dots 
-                    int dotToUse = Random.Range(0, dots.Length);
+                    // Choose a random type of dots
+                    int currTileTypeNum = CalTileTypeNum();
+                    int dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
+
                     int maxIterations = 0;
                     while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
                     {
-                        dotToUse = Random.Range(0, dots.Length);
+                        dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
                         maxIterations++;
                         //Debug.Log(maxIterations);
                     }
@@ -263,13 +270,15 @@ public class Board : MonoBehaviour
                 if (!rockTiles[i, j] && allDots[i, j] == null)
                 {
                     Vector2 tempPosition = new Vector2(i, j + offset);
-                    int dotToUse = Random.Range(0, dots.Length);
+
+                    int currTileTypeNum = CalTileTypeNum();
+                    int dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
 
                     int maxIterations = 0;
                     while (MatchesAt(i, j, dots[dotToUse]))
                     {
                         maxIterations++;
-                        dotToUse = Random.Range(0, dots.Length);
+                        dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
                         if (maxIterations > 100)
                         {
                             break;
@@ -477,6 +486,7 @@ public class Board : MonoBehaviour
                 {
                     rockTiles[column - 1, row] = null;
                     rockTileCount--;
+                    UpdateDepth(height - row);
                 }
             }
         }
@@ -489,6 +499,7 @@ public class Board : MonoBehaviour
                 {
                     rockTiles[column + 1, row] = null;
                     rockTileCount--;
+                    UpdateDepth(height - row);
                 }
             }
         }
@@ -501,6 +512,7 @@ public class Board : MonoBehaviour
                 {
                     rockTiles[column, row - 1] = null;
                     rockTileCount--;
+                    UpdateDepth(height - row);
                 }
             }
         }
@@ -513,9 +525,18 @@ public class Board : MonoBehaviour
                 {
                     rockTiles[column, row + 1] = null;
                     rockTileCount--;
+                    UpdateDepth(height - row);
                 }
             }
         }
     }
 
+    private void UpdateDepth(int thisDepth)
+    {
+        currDepth = Mathf.Max(currDepth, thisDepth);
+    }
+    private int CalTileTypeNum()
+    {
+        return currDepth + 1;
+    }
 }
