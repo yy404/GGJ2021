@@ -104,13 +104,13 @@ public class Board : MonoBehaviour
                     int currTileTypeNum = CalTileTypeNum();
                     int dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
 
-                    int maxIterations = 0;
-                    while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
-                    {
-                        dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
-                        maxIterations++;
-                        //Debug.Log(maxIterations);
-                    }
+                    //int maxIterations = 0;
+                    //while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
+                    //{
+                    //    dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
+                    //    maxIterations++;
+                    //    //Debug.Log(maxIterations);
+                    //}
 
                     // Create a dot at (i,j) position
                     Vector2 tempPosition = new Vector2(i, j + offset);
@@ -274,19 +274,19 @@ public class Board : MonoBehaviour
         yield return new WaitForSeconds(refillDelay);
         RefillBoard();
 
-        while (MatchesOnBoard())
-        {
-            DestroyMatches(); // this is recursion
-            yield return new WaitForSeconds(2 * refillDelay);
-        }
-        findMatches.currentMatches.Clear();
-        yield return new WaitForSeconds(refillDelay);
+        //while (MatchesOnBoard())
+        //{
+        //    DestroyMatches(); // this is recursion
+        //    yield return new WaitForSeconds(2 * refillDelay);
+        //}
+        //findMatches.currentMatches.Clear();
+        //yield return new WaitForSeconds(refillDelay);
 
-        if (IsDeadlocked())
-        {
-            ShuffleBoard();
-            Debug.Log("Deadlocked!!!");
-        }
+        //if (IsDeadlocked())
+        //{
+        //    ShuffleBoard();
+        //    Debug.Log("Deadlocked!!!");
+        //}
 
         currentState = GameState.move;
     }
@@ -304,16 +304,16 @@ public class Board : MonoBehaviour
                     int currTileTypeNum = CalTileTypeNum();
                     int dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
 
-                    int maxIterations = 0;
-                    while (MatchesAt(i, j, dots[dotToUse]))
-                    {
-                        maxIterations++;
-                        dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
-                        if (maxIterations > 100)
-                        {
-                            break;
-                        }
-                    }
+                    //int maxIterations = 0;
+                    //while (MatchesAt(i, j, dots[dotToUse]))
+                    //{
+                    //    maxIterations++;
+                    //    dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
+                    //    if (maxIterations > 100)
+                    //    {
+                    //        break;
+                    //    }
+                    //}
 
                     GameObject piece = Instantiate(dots[dotToUse],
                       tempPosition, Quaternion.identity);
@@ -604,7 +604,7 @@ public class Board : MonoBehaviour
 
     private int CalTileTypeNum()
     {
-        return currDepth + 1;
+        return currDepth/2 + 1;
     }
 
     private void ShuffleSeqArray()
@@ -747,5 +747,65 @@ public class Board : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void DestroyAllMarked()
+    {
+        bool anyMarked = false;
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (rockTiles[i, j] != null && rockTiles[i, j].marked)
+                {
+                    rockTiles[i, j].TakeDamage(1);
+
+                    if (rockTiles[i, j].hitPoints <= 0)
+                    {
+                        rockTiles[i, j] = null;
+                        rockTileCount--;
+                        UpdateDepth(height - j);
+                    }
+                    else
+                    {
+                        rockTiles[i, j].marked = false;
+                    }
+
+                    anyMarked = true;
+                }
+
+                if (allDots[i, j] != null && allDots[i, j].GetComponent<Dot>().marked)
+                {
+                    if (allDots[i, j].tag == "TileOxygen")
+                    {
+                        gameManagement.ConsumeOxygen(-3); // add 3
+                    }
+                    else if (allDots[i, j].tag == "TileWaste")
+                    {
+                        gameManagement.ConsumeOxygen(2);
+                    }
+
+                    // particle 
+                    GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
+                    var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
+                    textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
+
+                    //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
+                    Destroy(allDots[i, j]);
+                    allDots[i, j] = null;
+
+                    anyMarked = true;
+                }
+            }
+        }
+
+        // sound
+        if (soundManagement != null && anyMarked)
+        {
+            soundManagement.PlayRandomDestroyNoise();
+        }
+
+        StartCoroutine(DecreaseRowCo());
     }
 }

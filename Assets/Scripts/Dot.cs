@@ -88,31 +88,36 @@ public class Dot : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (board.currentState == GameState.move)
-        {
-            //firstTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            ////Debug.Log(firstTouchPosition);
+        //if (board.currentState == GameState.move)
+        //{
+        //    //firstTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    ////Debug.Log(firstTouchPosition);
 
-            isMatched = true;
-        }
+        //    isMatched = true;
+        //}
 
     }
 
     private void OnMouseUp()
     {
-        if (board.currentState == GameState.move)
-        {
-            //finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //if (gameManagement.CheckIfGameEnd() == false)
-            //{
-            //    CalculateAngle(); // and may move pieces
-            //}
+        //if (board.currentState == GameState.move)
+        //{
+        //    //finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    //if (gameManagement.CheckIfGameEnd() == false)
+        //    //{
+        //    //    CalculateAngle(); // and may move pieces
+        //    //}
 
-            board.DestroyMatches();
+        //    board.DestroyMatches();
 
-            gameManagement.IncreaseDay();
-            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
-        }
+        //    gameManagement.IncreaseDay();
+        //    gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
+        //}
+
+        board.DestroyAllMarked();
+
+        gameManagement.IncreaseDay();
+        gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
     }
 
     private void OnMouseEnter()
