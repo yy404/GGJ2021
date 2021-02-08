@@ -494,6 +494,7 @@ MonoBehaviour:
   currentState: 1
   itemNum: 0
   seqArray: 
+  dotMarkCount: 0
 --- !u!1 &391359214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1886,7 +1887,6 @@ MonoBehaviour:
   maxOxygen: 100
   oxygenDailyConsumption: 3
   endGamePanel: {fileID: 287355019}
-  chipNum: 0
   enableClickRock: 0
   chipMsg:
   - 'A new message from Lily: In order to stay alive on this planet, XX oxygen is

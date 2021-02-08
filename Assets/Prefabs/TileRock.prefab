@@ -103,8 +103,12 @@ MonoBehaviour:
   cursorTextureUp: {fileID: 2800000, guid: 4b362c1f7e7c92f47981c79cdb831dc2, type: 3}
   chipParticle: {fileID: 23462556589404678, guid: 96211c9cbc37bbc4bb8754fa97b0d61c,
     type: 3}
+  specialParticle: {fileID: 132931491875251286, guid: c46c910196bf7764c8dd080aaeb3daa5,
+    type: 3}
   column: 0
   row: 0
+  spriteRend: {fileID: 0}
+  marked: 0
 --- !u!61 &5193764846332621375
 BoxCollider2D:
   m_ObjectHideFlags: 0

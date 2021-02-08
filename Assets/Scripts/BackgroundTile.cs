@@ -11,6 +11,7 @@ public class BackgroundTile : MonoBehaviour
     public Texture2D cursorTextureDown;
     public Texture2D cursorTextureUp;
     public GameObject chipParticle;
+    public GameObject specialParticle;
 
     public int column; //x
     public int row; //y
@@ -21,6 +22,7 @@ public class BackgroundTile : MonoBehaviour
     private Board board;
 
     public bool marked = false;
+    private GameObject specialParticleVar = null;
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +59,7 @@ public class BackgroundTile : MonoBehaviour
         if ((hitPoints == 0) && (board.ItemMap[column, row] != ItemType.None))
         {
             spriteRend.sprite = box;
+            specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
         }
     }
 
@@ -156,6 +159,11 @@ public class BackgroundTile : MonoBehaviour
         board.rockTiles[column, row] = null;
         board.rockTileCount--;
         board.UpdateDepth(board.height - row);
+
+        if (specialParticleVar != null)
+        {
+            Destroy(specialParticleVar);
+        }
         Destroy(this.gameObject);
 
         board.DecreaseRowFunc();
