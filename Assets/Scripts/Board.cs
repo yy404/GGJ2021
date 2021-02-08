@@ -692,7 +692,7 @@ public class Board : MonoBehaviour
         }
 
         // adding chips
-        for (int i = 0; i < gameManagement.chipNum; i++)
+        for (int i = 0; i < gameManagement.chipMsg.Length; i++)
         {
             AddItemToMap(ItemType.Chip, gameManagement.chipMsg[i]);
         }

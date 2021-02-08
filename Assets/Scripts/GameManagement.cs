@@ -15,8 +15,6 @@ public class GameManagement : MonoBehaviour
 
     public GameObject endGamePanel;
 
-    public int chipNum;
-
     public bool enableClickRock = false;
 
     public string[] chipMsg;
@@ -36,8 +34,6 @@ public class GameManagement : MonoBehaviour
     {
         board = FindObjectOfType<Board>();
         soundManagement = FindObjectOfType<SoundManagement>();
-
-        chipNum = chipMsg.Length;
 
         // Initialise stats
         currOxygen = maxOxygen;
