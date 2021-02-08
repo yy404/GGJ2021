@@ -89,6 +89,11 @@ public class BackgroundTile : MonoBehaviour
         {
             hitPoints -= damage;
         }
+
+        if ((hitPoints == 1) && (board.ItemMap[column, row] != ItemType.None))
+        {
+            spriteRend.sprite = box;
+        }
     }
 
     private void OnMouseDown()
@@ -113,10 +118,6 @@ public class BackgroundTile : MonoBehaviour
             }
 
             TakeDamage(1);
-            if ((hitPoints == 1) && (board.ItemMap[column, row] != ItemType.None))
-            {
-                spriteRend.sprite = box;
-            }
 
             Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
         }
