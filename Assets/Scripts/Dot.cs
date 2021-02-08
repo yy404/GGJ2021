@@ -114,10 +114,19 @@ public class Dot : MonoBehaviour
         //    gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
         //}
 
-        board.DestroyAllMarked();
+        if (board.dotMarkCount > 1)
+        {
+            board.DestroyAllMarked();
+            gameManagement.IncreaseDay();
+            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
+        }
+        else
+        {
+            // can't click
+            // sound
+        }
 
-        gameManagement.IncreaseDay();
-        gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
+
     }
 
     private void OnMouseEnter()
@@ -231,6 +240,7 @@ public class Dot : MonoBehaviour
     public void MarkIt(string thisTag)
     {
         spriteRend.material.color = Color.yellow;
+        board.dotMarkCount++;
         board.MarkRock(column, row);
 
         if (column > 0)

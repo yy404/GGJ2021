@@ -58,6 +58,8 @@ public class Board : MonoBehaviour
     public ItemType[,] ItemMap;
     public string[,] msgMap;
 
+    public int dotMarkCount = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -732,6 +734,7 @@ public class Board : MonoBehaviour
                 }
             }
         }
+        dotMarkCount = 0;
     }
 
     public void ClearRockMark()
