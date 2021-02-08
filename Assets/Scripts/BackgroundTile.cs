@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BackgroundTile : MonoBehaviour
 {
-    public int hitPoints;
+    public int hitPoints = 1;
     public Sprite specialRock;
     public Sprite box;
     public Texture2D cursorTextureOver;
@@ -31,51 +31,15 @@ public class BackgroundTile : MonoBehaviour
         soundManagement = FindObjectOfType<SoundManagement>();
         board = FindObjectOfType<Board>();
 
-        if (board.ItemMap[column, row] != ItemType.None)
-        {
-            hitPoints = 2;
-        }
-        else
-        {
-            hitPoints = 1;
-        }
-
         spriteRend.material.color = Color.black;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (hitPoints <= 0)
+        if (hitPoints <= 0 && board.ItemMap[column, row] == ItemType.None)
         {
-            gameManagement.DisplayLogText(board.msgMap[column, row]); // need to be before SetGameEnd()
-
-            if (board.ItemMap[column, row] == ItemType.Ship)
-            {
-                gameManagement.SetGameEnd();
-                soundManagement.PlayRandomWinSound();
-            }
-            else if (board.ItemMap[column, row] == ItemType.Chip)
-            {
-                Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
-
-                if (soundManagement != null)
-                {
-                    soundManagement.PlayRandomPickupNoise();
-                }
-            }
-            else if (board.ItemMap[column, row] == ItemType.Radar)
-            {
-                Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
-                board.DisplayRadar();
-
-                if (soundManagement != null)
-                {
-                    soundManagement.PlayRandomPickupNoise();
-                }
-            }
-
-            Destroy(this.gameObject);
+            DestroyBackgroundTile();
         }
     }
 
@@ -90,7 +54,7 @@ public class BackgroundTile : MonoBehaviour
             hitPoints -= damage;
         }
 
-        if ((hitPoints == 1) && (board.ItemMap[column, row] != ItemType.None))
+        if ((hitPoints == 0) && (board.ItemMap[column, row] != ItemType.None))
         {
             spriteRend.sprite = box;
         }
@@ -120,6 +84,38 @@ public class BackgroundTile : MonoBehaviour
             TakeDamage(1);
 
             Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
+        }
+
+        if (hitPoints <= 0 && board.ItemMap[column, row] != ItemType.None)
+        {
+            gameManagement.DisplayLogText(board.msgMap[column, row]); // need to be before SetGameEnd()
+
+            if (board.ItemMap[column, row] == ItemType.Ship)
+            {
+                gameManagement.SetGameEnd();
+                soundManagement.PlayRandomWinSound();
+            }
+            else if (board.ItemMap[column, row] == ItemType.Chip)
+            {
+                Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
+
+                if (soundManagement != null)
+                {
+                    soundManagement.PlayRandomPickupNoise();
+                }
+            }
+            else if (board.ItemMap[column, row] == ItemType.Radar)
+            {
+                Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
+                board.DisplayRadar();
+
+                if (soundManagement != null)
+                {
+                    soundManagement.PlayRandomPickupNoise();
+                }
+            }
+
+            DestroyBackgroundTile(); 
         }
     }
 
@@ -153,5 +149,15 @@ public class BackgroundTile : MonoBehaviour
         {
             spriteRend.sprite = specialRock;
         }
+    }
+
+    private void DestroyBackgroundTile()
+    {
+        board.rockTiles[column, row] = null;
+        board.rockTileCount--;
+        board.UpdateDepth(board.height - row);
+        Destroy(this.gameObject);
+
+        board.DecreaseRowFunc();
     }
 }

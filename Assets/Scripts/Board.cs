@@ -599,7 +599,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void UpdateDepth(int thisDepth)
+    public void UpdateDepth(int thisDepth)
     {
         currDepth = Mathf.Max(currDepth, thisDepth);
     }
@@ -763,18 +763,6 @@ public class Board : MonoBehaviour
                 if (rockTiles[i, j] != null && rockTiles[i, j].marked)
                 {
                     rockTiles[i, j].TakeDamage(1);
-
-                    if (rockTiles[i, j].hitPoints <= 0)
-                    {
-                        rockTiles[i, j] = null;
-                        rockTileCount--;
-                        UpdateDepth(height - j);
-                    }
-                    else
-                    {
-                        rockTiles[i, j].marked = false;
-                    }
-
                     anyMarked = true;
                 }
 
@@ -814,6 +802,12 @@ public class Board : MonoBehaviour
         ClearDotMark();
         ClearRockMark();
 
+        StartCoroutine(DecreaseRowCo());
+    }
+
+    public void DecreaseRowFunc()
+    {
+        // need this public function to be called by other object; won't work otherwise
         StartCoroutine(DecreaseRowCo());
     }
 }
