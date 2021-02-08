@@ -131,8 +131,11 @@ public class Dot : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        marked = true;
-        MarkIt(this.tag);
+        if (board.currentState == GameState.move)
+        {
+            marked = true;
+            MarkIt(this.tag);
+        }
     }
 
     private void OnMouseExit()

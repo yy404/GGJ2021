@@ -6,7 +6,7 @@ public enum GameState
 {
     wait,
     move,
-    pause,
+    //pause,
 }
 
 public enum TileKind
@@ -808,6 +808,11 @@ public class Board : MonoBehaviour
         {
             soundManagement.PlayRandomDestroyNoise();
         }
+
+        // avoid using outdated info
+        currentState = GameState.wait;
+        ClearDotMark();
+        ClearRockMark();
 
         StartCoroutine(DecreaseRowCo());
     }
