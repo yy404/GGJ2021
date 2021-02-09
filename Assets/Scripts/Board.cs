@@ -201,11 +201,11 @@ public class Board : MonoBehaviour
 
             if (allDots[column, row].tag == "TileOxygen")
             {
-                gameManagement.ConsumeOxygen(-3); // add 3
+                gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenVal * -1); // add
             }
             else if (allDots[column, row].tag == "TileWaste")
             {
-                gameManagement.ConsumeOxygen(2);
+                gameManagement.ConsumeOxygen(gameManagement.singleTileWasteVal);
             }
 
             if (soundManagement != null)
@@ -606,6 +606,7 @@ public class Board : MonoBehaviour
 
     private int CalTileTypeNum()
     {
+        // add a new type every two more depth
         return currDepth/2 + 1;
     }
 
@@ -770,11 +771,12 @@ public class Board : MonoBehaviour
                 {
                     if (allDots[i, j].tag == "TileOxygen")
                     {
-                        gameManagement.ConsumeOxygen(-3); // add 3
+                        gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenVal * -1); // add
                     }
                     else if (allDots[i, j].tag == "TileWaste")
                     {
-                        gameManagement.ConsumeOxygen(2);
+                        gameManagement.ConsumeOxygen(gameManagement.singleTileWasteVal);
+                        gameManagement.CollectWaste(1);
                     }
 
                     // particle 

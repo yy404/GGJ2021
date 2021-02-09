@@ -9,9 +9,13 @@ public class GameManagement : MonoBehaviour
     public Text dayText;
     public Text dialogueText;
     public Text logText;
+    public Text statsText;
+    public Text deltaText;
 
-    public int maxOxygen;
-    public int oxygenDailyConsumption;
+    public int maxOxygen = 100;
+    public int oxygenDailyConsumption = 3;
+    public int singleTileOxygenVal = 3;
+    public int singleTileWasteVal = 2;
 
     public GameObject endGamePanel;
 
@@ -28,6 +32,9 @@ public class GameManagement : MonoBehaviour
     private SoundManagement soundManagement;
 
     private bool endGame = false;
+
+    private int wasteCount = 0;
+    public int wasteCountEnd = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +55,7 @@ public class GameManagement : MonoBehaviour
         if (endGame == false)
         {
             oxygenText.text = "O2: " + currOxygen;
-            dayText.text = "Day: " + currDay;
+            dayText.text = "Day " + currDay;
         }
 
         if (Input.GetKey("escape"))
@@ -112,5 +119,22 @@ public class GameManagement : MonoBehaviour
         endGamePanel.SetActive(true);
 
         //board.currentState = GameState.lose;
+    }
+
+    public void CollectWaste(int num)
+    {
+        wasteCount += num;
+        statsText.text = "Pollutants cleared: " + wasteCount;
+        if (wasteCount >= wasteCountEnd)
+        {
+            DisplayLogText("I have cleared enough pollutants, it seems the environment has been improved. This planet has become a suitable place to live. Would I like to stay here?."); // need to be before SetGameEnd()
+            SetGameEnd();
+            soundManagement.PlayRandomWinSound();
+        }
+    }
+
+    public void DisplayDeltaText(string displayText)
+    {
+        deltaText.text = displayText;
     }
 }

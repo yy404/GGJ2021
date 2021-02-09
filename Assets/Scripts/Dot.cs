@@ -144,6 +144,7 @@ public class Dot : MonoBehaviour
     {
         board.ClearDotMark();
         board.ClearRockMark();
+        gameManagement.DisplayDeltaText("");
     }
 
     void CalculateAngle()
@@ -302,6 +303,28 @@ public class Dot : MonoBehaviour
                     theOtherDotComp.marked = true;
                     theOtherDotComp.MarkIt(thisTag);
                 }
+            }
+        }
+
+        if (board.dotMarkCount > 1)
+        {
+            int tempOxygenVal = -1 * gameManagement.oxygenDailyConsumption;
+            if (thisTag == "TileOxygen")
+            {
+                tempOxygenVal += board.dotMarkCount * gameManagement.singleTileOxygenVal;
+            }
+            else if (thisTag == "TileWaste")
+            {
+                tempOxygenVal -= board.dotMarkCount * gameManagement.singleTileWasteVal;
+            }
+
+            if (tempOxygenVal > 0)
+            {
+                gameManagement.DisplayDeltaText("+" + tempOxygenVal);
+            }
+            else
+            {
+                gameManagement.DisplayDeltaText("" + tempOxygenVal);
             }
         }
     }

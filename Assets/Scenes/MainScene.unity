@@ -222,16 +222,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 125031077}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 467.04156}
+  m_LocalPosition: {x: 0, y: 0, z: 467.04153}
   m_LocalScale: {x: 0.48541665, y: 0.48541665, z: 0.48541665}
   m_Children: []
-  m_Father: {fileID: 2070151481}
-  m_RootOrder: 1
+  m_Father: {fileID: 1041116001}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -64.45, y: 138.5}
-  m_SizeDelta: {x: 206.41318, y: 38.67047}
+  m_AnchoredPosition: {x: -68.3, y: 101.63}
+  m_SizeDelta: {x: 250.6413, y: 87.45219}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &125031079
 MonoBehaviour:
@@ -254,12 +254,12 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 5b1ebb3b2c4fe2c4fbd44202dfc18ecb, type: 3}
-    m_FontSize: 36
+    m_FontSize: 64
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
-    m_MaxSize: 40
-    m_Alignment: 0
+    m_MaxSize: 64
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -291,7 +291,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &212181658
 RectTransform:
   m_ObjectHideFlags: 0
@@ -304,7 +304,7 @@ RectTransform:
   m_LocalScale: {x: 0.48541665, y: 0.48541665, z: 0.48541665}
   m_Children: []
   m_Father: {fileID: 1041116001}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -483,7 +483,6 @@ MonoBehaviour:
   - {fileID: 6811152819448279191, guid: 0f95dda36e41a5a4dbf9e9d7876e0269, type: 3}
   - {fileID: 7692374423141688322, guid: db8b5654ee6449845bc992bb1a5958aa, type: 3}
   - {fileID: 2057935957443175659, guid: d4d91b8ac459cf346a16a10f49cbe985, type: 3}
-  - {fileID: 7692374423141688322, guid: b41eae6986ae5db4099e1d97c987b4fd, type: 3}
   - {fileID: 7692374423141688322, guid: 5f643f4f4ab3f7c4aa533d6b0a40dea2, type: 3}
   spriteParticle: {fileID: 23462556589404678, guid: 5cd32c1f670123247889834726e7fb16,
     type: 3}
@@ -1485,8 +1484,10 @@ Transform:
   m_Children:
   - {fileID: 547848912}
   - {fileID: 521431784}
-  - {fileID: 2070151481}
   - {fileID: 212181658}
+  - {fileID: 1542144444}
+  - {fileID: 125031078}
+  - {fileID: 1279507211}
   m_Father: {fileID: 1486602218}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1563,6 +1564,84 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1149223989}
+  m_CullTransparentMesh: 0
+--- !u!1 &1161305850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1161305851}
+  - component: {fileID: 1161305853}
+  - component: {fileID: 1161305852}
+  m_Layer: 5
+  m_Name: TextStats
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1161305851
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161305850}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 467.04163}
+  m_LocalScale: {x: 0.48541665, y: 0.48541665, z: 0.48541665}
+  m_Children: []
+  m_Father: {fileID: 1711600749}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -127.4, y: 0}
+  m_SizeDelta: {x: 539.9426, y: 53.705627}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1161305852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161305850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: d1bb09562b3d2e746b4ce4fcbe0e8c20, type: 3}
+    m_FontSize: 36
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 2
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 0.8
+  m_Text: 
+--- !u!222 &1161305853
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161305850}
   m_CullTransparentMesh: 0
 --- !u!1 &1206046823
 GameObject:
@@ -1757,6 +1836,84 @@ Transform:
   m_Father: {fileID: 2052542123}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1279507210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1279507211}
+  - component: {fileID: 1279507212}
+  - component: {fileID: 1279507213}
+  m_Layer: 5
+  m_Name: TextDelta
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1279507211
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279507210}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 467.04153}
+  m_LocalScale: {x: 0.48541665, y: 0.48541665, z: 0.48541665}
+  m_Children: []
+  m_Father: {fileID: 1041116001}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -68.3, y: 67}
+  m_SizeDelta: {x: 266.96478, y: 87.45219}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1279507212
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279507210}
+  m_CullTransparentMesh: 0
+--- !u!114 &1279507213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279507210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0, b: 0, a: 0.39215687}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 5b1ebb3b2c4fe2c4fbd44202dfc18ecb, type: 3}
+    m_FontSize: 64
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 2
+    m_MaxSize: 64
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
 --- !u!1 &1320768349
 GameObject:
   m_ObjectHideFlags: 0
@@ -1884,12 +2041,16 @@ MonoBehaviour:
   dayText: {fileID: 1542144445}
   dialogueText: {fileID: 212181659}
   logText: {fileID: 1897933084}
+  statsText: {fileID: 1161305852}
+  deltaText: {fileID: 1279507213}
   maxOxygen: 100
   oxygenDailyConsumption: 3
+  singleTileOxygenVal: 3
+  singleTileWasteVal: 2
   endGamePanel: {fileID: 287355019}
   enableClickRock: 0
   chipMsg:
-  - 'A new message from Lily: In order to stay alive on this planet, XX oxygen is
+  - 'A new message from Lily: In order to stay alive on this planet, the oxygen is
     essential everyday. Unfortunately, I consumed all my oxygen and lay at rest here.
     Good luck to you!'
   - "A new message from Henry: It\u2019s difficult to stay alive on this planet.
@@ -1910,6 +2071,7 @@ MonoBehaviour:
     It seems I survived, but where am I? OK, let me see what I can find here. '
   endMsg: I have no idea what happened, but I found a brand new spaceship. I am ready
     for the new Journey!
+  wasteCountEnd: 100
 --- !u!1 &1486602214
 GameObject:
   m_ObjectHideFlags: 0
@@ -2259,16 +2421,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1542144443}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 467.04156}
+  m_LocalPosition: {x: 0, y: 0, z: 467.04153}
   m_LocalScale: {x: 0.48541665, y: 0.48541665, z: 0.48541665}
   m_Children: []
-  m_Father: {fileID: 2070151481}
-  m_RootOrder: 0
+  m_Father: {fileID: 1041116001}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -64.43, y: 155}
-  m_SizeDelta: {x: 205.22919, y: 38.700806}
+  m_AnchoredPosition: {x: -72.2, y: 148}
+  m_SizeDelta: {x: 307.43143, y: 73.55119}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1542144445
 MonoBehaviour:
@@ -2291,18 +2453,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 5b1ebb3b2c4fe2c4fbd44202dfc18ecb, type: 3}
-    m_FontSize: 36
+    m_FontSize: 64
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
-    m_MaxSize: 40
-    m_Alignment: 0
+    m_MaxSize: 64
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Day: 0'
+  m_Text: Day 0
 --- !u!222 &1542144446
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2339,6 +2501,7 @@ Transform:
   m_LocalScale: {x: 2.060086, y: 2.060086, z: 2.060086}
   m_Children:
   - {fileID: 549713802}
+  - {fileID: 1161305851}
   - {fileID: 1897933083}
   m_Father: {fileID: 1486602218}
   m_RootOrder: 5
@@ -2854,12 +3017,12 @@ RectTransform:
   m_LocalScale: {x: 0.48541665, y: 0.48541665, z: 0.48541665}
   m_Children: []
   m_Father: {fileID: 1711600749}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -127.4, y: -167.7}
-  m_SizeDelta: {x: 539.9426, y: 541.1438}
+  m_AnchoredPosition: {x: -127.4, y: -163}
+  m_SizeDelta: {x: 539.9426, y: 560.25885}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1897933084
 MonoBehaviour:
@@ -3385,36 +3548,4 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2070151480
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2070151481}
-  m_Layer: 0
-  m_Name: StatusBar
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2070151481
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2070151480}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1542144444}
-  - {fileID: 125031078}
-  m_Father: {fileID: 1041116001}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
