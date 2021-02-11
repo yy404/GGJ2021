@@ -43,6 +43,7 @@ public class Board : MonoBehaviour
     public int rockTileCount = 48;
 
     public int initFreeRowNum = 2; // initial available rows for filling
+    public int initFreeColumnNum = 2; // initial available columns for filling
     public int currDepth;
 
     public float refillDelay = 0.5f;
@@ -493,8 +494,7 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                //if ((i > 3) || (j < 4))
-                if (j < height - initFreeRowNum) // leave x line(s) above
+                if ((i > initFreeColumnNum - 1) || (j < height - initFreeRowNum)) // leave x line(s) above
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     GameObject tile = Instantiate(rockTilePrefab, tempPosition, Quaternion.identity);

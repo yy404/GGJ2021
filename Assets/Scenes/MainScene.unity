@@ -472,8 +472,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86bcac31ae90cac41b8c67f03a8e5f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 8
-  height: 8
+  width: 12
+  height: 12
   offset: 20
   tilePrefab: {fileID: 5197373523682421405, guid: 75a7f371be60a9445b3031218b3cd1ed,
     type: 3}
@@ -488,6 +488,7 @@ MonoBehaviour:
     type: 3}
   rockTileCount: 48
   initFreeRowNum: 2
+  initFreeColumnNum: 2
   currDepth: 0
   refillDelay: 0.5
   currentState: 1
@@ -734,10 +735,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5e2acbdd712ef4f8c2050fb30d95e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraOffsetX: -3.2
+  cameraOffsetX: -4.6
   cameraOffsetY: 0
   cameraOffsetZ: -10
-  padding: 0.7
+  padding: 0.9
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
