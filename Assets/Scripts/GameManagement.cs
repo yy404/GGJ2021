@@ -36,6 +36,8 @@ public class GameManagement : MonoBehaviour
     private int wasteCount = 0;
     public int wasteCountEnd = 100;
 
+    public float hardRockProbVal = 0.2f;
+
     // Start is called before the first frame update
     void Start()
     {

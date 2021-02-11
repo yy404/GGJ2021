@@ -34,6 +34,19 @@ public class BackgroundTile : MonoBehaviour
         board = FindObjectOfType<Board>();
 
         spriteRend.material.color = Color.black;
+
+        if (board.ItemMap[column, row] == ItemType.None)
+        {
+            if (Random.Range(0.0f, 1.0f) <= gameManagement.hardRockProbVal)
+            {
+                //spriteRend.material.color = Color.white;
+                hitPoints = 1000;
+            }
+            else
+            {
+                spriteRend.sprite = specialRock;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -59,7 +72,10 @@ public class BackgroundTile : MonoBehaviour
         if ((hitPoints == 0) && (board.ItemMap[column, row] != ItemType.None))
         {
             spriteRend.sprite = box;
-            specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
+            if (specialParticleVar == null)
+            {
+                specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
+            }
         }
     }
 
@@ -148,9 +164,9 @@ public class BackgroundTile : MonoBehaviour
 
     public void DisplaySpecialRock()
     {
-        if (spriteRend.sprite != box)
+        if (specialParticleVar == null)
         {
-            spriteRend.sprite = specialRock;
+            specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
         }
     }
 
