@@ -42,8 +42,8 @@ public class Board : MonoBehaviour
     public BackgroundTile[,] rockTiles;
     public int rockTileCount = 48;
 
-    public int initFreeRowNum = 2; // initial available rows for filling
-    public int initFreeColumnNum = 2; // initial available columns for filling
+    public int initFreeRowNum = 3; // initial available rows for filling
+    public int initFreeColumnNum = 3; // initial available columns for filling
     public int currDepth;
 
     public float refillDelay = 0.5f;
@@ -75,6 +75,8 @@ public class Board : MonoBehaviour
         msgMap = new string[width, height];
 
         seqArray = new int[width * height];
+
+        rockTileCount = width * height - initFreeRowNum * initFreeColumnNum;
 
         currDepth = initFreeRowNum;
 
@@ -607,7 +609,19 @@ public class Board : MonoBehaviour
     private int CalTileTypeNum()
     {
         // add a new type every two more depth
-        return currDepth/2 + 1;
+        //return currDepth/2 + 1;
+
+        int freeTileCount = width * height - rockTileCount;
+        float freeTileRatio = (freeTileCount * 1.0f) / (width * height);
+
+        if (freeTileRatio < 0.25f)
+        {
+            return 2;
+        }
+        else
+        {
+            return 3;
+        }
     }
 
     private void ShuffleSeqArray()
