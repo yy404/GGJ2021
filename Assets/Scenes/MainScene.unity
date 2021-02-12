@@ -481,14 +481,13 @@ MonoBehaviour:
     type: 3}
   dots:
   - {fileID: 6811152819448279191, guid: 0f95dda36e41a5a4dbf9e9d7876e0269, type: 3}
-  - {fileID: 7692374423141688322, guid: db8b5654ee6449845bc992bb1a5958aa, type: 3}
   - {fileID: 2057935957443175659, guid: d4d91b8ac459cf346a16a10f49cbe985, type: 3}
-  - {fileID: 7692374423141688322, guid: 5f643f4f4ab3f7c4aa533d6b0a40dea2, type: 3}
+  - {fileID: 7692374423141688322, guid: db8b5654ee6449845bc992bb1a5958aa, type: 3}
   spriteParticle: {fileID: 23462556589404678, guid: 5cd32c1f670123247889834726e7fb16,
     type: 3}
   rockTileCount: 48
-  initFreeRowNum: 2
-  initFreeColumnNum: 2
+  initFreeRowNum: 3
+  initFreeColumnNum: 3
   currDepth: 0
   refillDelay: 0.5
   currentState: 1
@@ -2073,6 +2072,7 @@ MonoBehaviour:
   endMsg: I have no idea what happened, but I found a brand new spaceship. I am ready
     for the new Journey!
   wasteCountEnd: 100
+  hardRockProbVal: 0.2
 --- !u!1 &1486602214
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 public class BackgroundTile : MonoBehaviour
 {
     public int hitPoints = 1;
+    public Sprite wholeRock;
     public Sprite specialRock;
     public Sprite box;
     public Texture2D cursorTextureOver;
@@ -27,12 +28,14 @@ public class BackgroundTile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spriteRend = GetComponent<SpriteRenderer>();
-        //spriteRend.sprite = specialRock;
         gameManagement = FindObjectOfType<GameManagement>();
         soundManagement = FindObjectOfType<SoundManagement>();
         board = FindObjectOfType<Board>();
 
+        spriteRend = GetComponent<SpriteRenderer>();
+
+        // default settings
+        spriteRend.sprite = specialRock;
         spriteRend.material.color = Color.black;
 
         if (board.ItemMap[column, row] == ItemType.None)
@@ -40,11 +43,8 @@ public class BackgroundTile : MonoBehaviour
             if (Random.Range(0.0f, 1.0f) <= gameManagement.hardRockProbVal)
             {
                 //spriteRend.material.color = Color.white;
-                hitPoints = 1000;
-            }
-            else
-            {
-                spriteRend.sprite = specialRock;
+                hitPoints = 999;
+                spriteRend.sprite = wholeRock;
             }
         }
     }
