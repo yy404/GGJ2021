@@ -80,10 +80,16 @@ public class Dot : MonoBehaviour
         }
     }
 
-    // This is for testing and Debug only.
     private void OnMouseOver()
     {
-        gameManagement.DisplayDialogueText("Clicking");
+        if (board.dotMarkCount == 0)
+        {
+            if (board.currentState == GameState.move)
+            {
+                marked = true;
+                MarkIt(this.tag);
+            }
+        }
     }
 
     private void OnMouseDown()
