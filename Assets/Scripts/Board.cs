@@ -701,9 +701,12 @@ public class Board : MonoBehaviour
         }
 
         // adding ship(s)
-        for (int i = 0; i < 1; i++)
+        if (Random.Range(0.0f, 1.0f) <= gameManagement.shipProbVal)
         {
-            AddItemToMap(ItemType.Ship, gameManagement.endMsg);
+            for (int i = 0; i < 1; i++)
+            {
+                AddItemToMap(ItemType.Ship, gameManagement.endMsg);
+            }
         }
 
         // adding chips

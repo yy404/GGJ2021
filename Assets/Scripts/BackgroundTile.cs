@@ -8,6 +8,9 @@ public class BackgroundTile : MonoBehaviour
     public Sprite wholeRock;
     public Sprite specialRock;
     public Sprite box;
+    public Sprite ship;
+    public Sprite chip;
+
     public Texture2D cursorTextureOver;
     public Texture2D cursorTextureDown;
     public Texture2D cursorTextureUp;
@@ -71,7 +74,18 @@ public class BackgroundTile : MonoBehaviour
 
         if ((hitPoints == 0) && (board.ItemMap[column, row] != ItemType.None))
         {
-            spriteRend.sprite = box;
+            if (board.ItemMap[column, row] == ItemType.Ship)
+            {
+                spriteRend.sprite = ship;
+            }
+            else if (board.ItemMap[column, row] == ItemType.Chip)
+            {
+                spriteRend.sprite = chip;
+            }
+            else
+            {
+                spriteRend.sprite = box;
+            }
             if (specialParticleVar == null)
             {
                 specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
