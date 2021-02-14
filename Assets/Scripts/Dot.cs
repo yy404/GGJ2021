@@ -150,6 +150,7 @@ public class Dot : MonoBehaviour
     {
         board.ClearDotMark();
         board.ClearRockMark();
+        board.seedMarkCount = 0;
         gameManagement.DisplayDeltaText("");
     }
 
@@ -262,10 +263,19 @@ public class Dot : MonoBehaviour
             if (theOtherDot != null)
             {
                 Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
-                if (!theOtherDotComp.marked && theOtherDotComp.tag == thisTag)
+                if (!theOtherDotComp.marked)
                 {
-                    theOtherDotComp.marked = true;
-                    theOtherDotComp.MarkIt(thisTag);
+                    if (theOtherDotComp.tag == thisTag)
+                    {
+                        theOtherDotComp.marked = true;
+                        theOtherDotComp.MarkIt(thisTag);
+                    }
+                    else if (theOtherDotComp.tag == "TileSeed")
+                    {
+                        theOtherDotComp.marked = true;
+                        board.seedMarkCount++;
+                        theOtherDotComp.MarkIt(thisTag);
+                    }
                 }
             }
         }
@@ -276,10 +286,19 @@ public class Dot : MonoBehaviour
             if (theOtherDot != null)
             {
                 Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
-                if (!theOtherDotComp.marked && theOtherDotComp.tag == thisTag)
+                if (!theOtherDotComp.marked)
                 {
-                    theOtherDotComp.marked = true;
-                    theOtherDotComp.MarkIt(thisTag);
+                    if (theOtherDotComp.tag == thisTag)
+                    {
+                        theOtherDotComp.marked = true;
+                        theOtherDotComp.MarkIt(thisTag);
+                    }
+                    else if (theOtherDotComp.tag == "TileSeed")
+                    {
+                        theOtherDotComp.marked = true;
+                        board.seedMarkCount++;
+                        theOtherDotComp.MarkIt(thisTag);
+                    }
                 }
             }
         }
@@ -290,10 +309,19 @@ public class Dot : MonoBehaviour
             if (theOtherDot != null)
             {
                 Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
-                if (!theOtherDotComp.marked && theOtherDotComp.tag == thisTag)
+                if (!theOtherDotComp.marked)
                 {
-                    theOtherDotComp.marked = true;
-                    theOtherDotComp.MarkIt(thisTag);
+                    if (theOtherDotComp.tag == thisTag)
+                    {
+                        theOtherDotComp.marked = true;
+                        theOtherDotComp.MarkIt(thisTag);
+                    }
+                    else if (theOtherDotComp.tag == "TileSeed")
+                    {
+                        theOtherDotComp.marked = true;
+                        board.seedMarkCount++;
+                        theOtherDotComp.MarkIt(thisTag);
+                    }
                 }
             }
         }
@@ -304,24 +332,48 @@ public class Dot : MonoBehaviour
             if (theOtherDot != null)
             {
                 Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
-                if (!theOtherDotComp.marked && theOtherDotComp.tag == thisTag)
+                if (!theOtherDotComp.marked)
                 {
-                    theOtherDotComp.marked = true;
-                    theOtherDotComp.MarkIt(thisTag);
+                    if (theOtherDotComp.tag == thisTag)
+                    {
+                        theOtherDotComp.marked = true;
+                        theOtherDotComp.MarkIt(thisTag);
+                    }
+                    else if (theOtherDotComp.tag == "TileSeed")
+                    {
+                        theOtherDotComp.marked = true;
+                        board.seedMarkCount++;
+                        theOtherDotComp.MarkIt(thisTag);
+                    }
                 }
             }
         }
 
+        // to be optimised
         if (board.dotMarkCount > 1)
         {
             int tempOxygenVal = -1 * gameManagement.oxygenDailyConsumption;
             if (thisTag == "TileOxygen")
             {
-                tempOxygenVal += board.dotMarkCount * gameManagement.singleTileOxygenVal;
+                tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * gameManagement.singleTileOxygenVal;
+                //if (board.seedMarkCount > 0)
+                //{
+                //    // bonus adding 1 for each tile
+                //    tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * 1;
+                //}
             }
             else if (thisTag == "TileWaste")
             {
-                tempOxygenVal -= board.dotMarkCount * gameManagement.singleTileWasteVal;
+                tempOxygenVal -= (board.dotMarkCount - board.seedMarkCount) * gameManagement.singleTileWasteVal;
+                if (board.seedMarkCount > 0)
+                {
+                    // bonus adding 1 for each tile
+                    tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * 1;
+                }
+            }
+            else if (thisTag == "TileSeed")
+            {
+                tempOxygenVal += board.dotMarkCount * gameManagement.singleTileOxygenValPlus;
             }
 
             if (tempOxygenVal > 0)

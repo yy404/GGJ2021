@@ -11,6 +11,7 @@ TagManager:
   - TileEnergy
   - TileChip
   - TileCrystal
+  - TileSeed
   layers:
   - Default
   - TransparentFX

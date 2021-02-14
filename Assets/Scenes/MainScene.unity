@@ -481,8 +481,9 @@ MonoBehaviour:
     type: 3}
   dots:
   - {fileID: 6811152819448279191, guid: 0f95dda36e41a5a4dbf9e9d7876e0269, type: 3}
-  - {fileID: 2057935957443175659, guid: d4d91b8ac459cf346a16a10f49cbe985, type: 3}
   - {fileID: 7692374423141688322, guid: db8b5654ee6449845bc992bb1a5958aa, type: 3}
+  - {fileID: 2057935957443175659, guid: d4d91b8ac459cf346a16a10f49cbe985, type: 3}
+  - {fileID: 7692374423141688322, guid: 3dc766a1ccad00d49b3cc5982399eaf6, type: 3}
   spriteParticle: {fileID: 23462556589404678, guid: 5cd32c1f670123247889834726e7fb16,
     type: 3}
   rockTileCount: 48
@@ -494,6 +495,7 @@ MonoBehaviour:
   itemNum: 0
   seqArray: 
   dotMarkCount: 0
+  seedMarkCount: 0
 --- !u!1 &391359214
 GameObject:
   m_ObjectHideFlags: 0
@@ -2047,6 +2049,7 @@ MonoBehaviour:
   oxygenDailyConsumption: 3
   singleTileOxygenVal: 3
   singleTileWasteVal: 2
+  singleTileOxygenValPlus: 0
   endGamePanel: {fileID: 287355019}
   enableClickRock: 0
   chipMsg:
@@ -2071,8 +2074,9 @@ MonoBehaviour:
     It seems I survived, but where am I? OK, let me see what I can find here. '
   endMsg: I have no idea what happened, but I found a brand new spaceship. I am ready
     for the new Journey!
-  wasteCountEnd: 100
+  wasteCountEnd: 200
   hardRockProbVal: 0.2
+  shipProbVal: 0.2
 --- !u!1 &1486602214
 GameObject:
   m_ObjectHideFlags: 0

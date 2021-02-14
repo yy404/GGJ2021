@@ -16,6 +16,7 @@ public class GameManagement : MonoBehaviour
     public int oxygenDailyConsumption = 3;
     public int singleTileOxygenVal = 3;
     public int singleTileWasteVal = 2;
+    public int singleTileOxygenValPlus = 0;
 
     public GameObject endGamePanel;
 
@@ -34,10 +35,10 @@ public class GameManagement : MonoBehaviour
     private bool endGame = false;
 
     private int wasteCount = 0;
-    public int wasteCountEnd = 100;
+    public int wasteCountEnd = 200;
 
     public float hardRockProbVal = 0.2f;
-    public float shipProbVal = 1f;
+    public float shipProbVal = 0.2f;
 
     // Start is called before the first frame update
     void Start()
