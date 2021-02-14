@@ -62,6 +62,8 @@ public class Board : MonoBehaviour
     public int dotMarkCount = 0;
     public int seedMarkCount = 0;
 
+    public int exploredAreaCount = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -80,6 +82,8 @@ public class Board : MonoBehaviour
         rockTileCount = width * height - initFreeRowNum * initFreeColumnNum;
 
         currDepth = initFreeRowNum;
+
+        exploredAreaCount = initFreeRowNum * initFreeColumnNum;
 
         SetUp();
     }
@@ -612,8 +616,7 @@ public class Board : MonoBehaviour
         // add a new type every two more depth
         //return currDepth/2 + 1;
 
-        int freeTileCount = width * height - rockTileCount;
-        float freeTileRatio = (freeTileCount * 1.0f) / (width * height);
+        float freeTileRatio = CalFreeTileRatio();
 
         if (freeTileRatio < 0.1f)
         {
@@ -627,6 +630,19 @@ public class Board : MonoBehaviour
         {
             return 4;
         }
+    }
+
+    public float CalFreeTileRatio()
+    {
+        int freeTileCount = CalFreeTileCount();
+        float freeTileRatio = (freeTileCount * 1.0f) / (width * height);
+        return freeTileRatio;
+    }
+
+    public int CalFreeTileCount()
+    {
+        int freeTileCount = width * height - rockTileCount;
+        return freeTileCount;
     }
 
     private void ShuffleSeqArray()
@@ -811,6 +827,10 @@ public class Board : MonoBehaviour
                     else if (allDots[i, j].tag == "TileSeed")
                     {
                         gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenValPlus * -1); // add
+                    }
+                    else if (allDots[i, j].tag == "TileGear")
+                    {
+                        gameManagement.CollectGear(1);
                     }
 
                     // particle 

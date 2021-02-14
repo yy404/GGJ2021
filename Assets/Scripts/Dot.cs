@@ -123,10 +123,11 @@ public class Dot : MonoBehaviour
         if (board.dotMarkCount > 1)
         {
             // decrease oxygen firstly to make the logic correct
-            gameManagement.IncreaseDay();
             gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
 
             board.DestroyAllMarked();
+
+            gameManagement.IncreaseDay(); // need to be after DestroyAllMarked() to avoid incorrect display
         }
         else
         {

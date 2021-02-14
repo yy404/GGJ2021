@@ -66,6 +66,7 @@ public class BackgroundTile : MonoBehaviour
         if (spriteRend.material.color == Color.black)
         {
             spriteRend.material.color = Color.white;
+            board.exploredAreaCount++;
         }
         else
         {
@@ -121,7 +122,15 @@ public class BackgroundTile : MonoBehaviour
 
         if (hitPoints <= 0 && board.ItemMap[column, row] != ItemType.None)
         {
-            gameManagement.DisplayLogText(board.msgMap[column, row]); // need to be before SetGameEnd()
+            if (board.ItemMap[column, row] == ItemType.Chip)
+            {
+                // popup display to be added
+                Debug.Log(board.msgMap[column, row]);
+            }
+            else
+            {
+                gameManagement.DisplayLogText(board.msgMap[column, row]); // need to be before SetGameEnd()
+            }
 
             if (board.ItemMap[column, row] == ItemType.Ship)
             {

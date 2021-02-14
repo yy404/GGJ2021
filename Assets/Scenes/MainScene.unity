@@ -496,6 +496,7 @@ MonoBehaviour:
   seqArray: 
   dotMarkCount: 0
   seedMarkCount: 0
+  exploredAreaCount: 0
 --- !u!1 &391359214
 GameObject:
   m_ObjectHideFlags: 0
@@ -2074,7 +2075,10 @@ MonoBehaviour:
     It seems I survived, but where am I? OK, let me see what I can find here. '
   endMsg: I have no idea what happened, but I found a brand new spaceship. I am ready
     for the new Journey!
+  goalMsgArea: Explored area
+  goalMsgGear: Collected gears
   wasteCountEnd: 200
+  gearCountEnd: 100
   hardRockProbVal: 0.2
   shipProbVal: 0.2
 --- !u!1 &1486602214

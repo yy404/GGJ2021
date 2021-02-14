@@ -26,6 +26,10 @@ public class GameManagement : MonoBehaviour
     public string introMsg;
     public string endMsg;
 
+    // goalMsgs
+    public string goalMsgArea;
+    public string goalMsgGear;
+
     private Board board;
     private int currOxygen;
     private int currDay;
@@ -36,6 +40,9 @@ public class GameManagement : MonoBehaviour
 
     private int wasteCount = 0;
     public int wasteCountEnd = 200;
+
+    private int gearCount = 0;
+    public int gearCountEnd = 100;
 
     public float hardRockProbVal = 0.2f;
     public float shipProbVal = 0.2f;
@@ -50,7 +57,12 @@ public class GameManagement : MonoBehaviour
         currOxygen = maxOxygen;
         currDay = 0;
 
-        DisplayLogText(introMsg);
+        // popup display to be added
+        Debug.Log(introMsg);
+
+        logText.text = "";
+        IncreaseDay(); // so that actually starting from day 1
+
     }
 
     // Update is called once per frame
@@ -80,7 +92,10 @@ public class GameManagement : MonoBehaviour
             currOxygen = 0;
             oxygenText.text = "O2: " + currOxygen;
 
-            DisplayLogText("I have consumed all my oxygen… If I could have the change to do it again, I would collect oxygen first."); // need to be before SetGameEnd()
+
+            string temp = "I have consumed all my oxygen… If I could have the change to do it again, I would collect oxygen first.";
+            temp += "\n";
+            DisplayLogText(temp); // need to be before SetGameEnd()
             SetGameEnd();
             soundManagement.PlayRandomLoseSound();
         }
@@ -88,7 +103,36 @@ public class GameManagement : MonoBehaviour
 
     public void IncreaseDay()
     {
+        UpdateDiary();
         currDay++;
+    }
+
+    private void UpdateDiary()
+    {
+        string thisDiary = "";
+
+        if (board.CalFreeTileRatio() >= 0.1f)
+        {
+            thisDiary += goalMsgGear + ": " + gearCount;
+            thisDiary += "/" + gearCountEnd;
+            thisDiary += "\n";
+        }
+
+        thisDiary += goalMsgArea + ": " + board.exploredAreaCount;
+        //thisDiary += "/" + (board.width * board.height);
+        thisDiary += "\n";
+
+        if (thisDiary == "")
+        {
+            // to add some random sentences
+            //thisDiary = "Nothing special today.";
+            //DisplayLogText(thisDiary);
+        }
+        else
+        {
+            DisplayLogText(thisDiary);
+        }
+
     }
 
     public void SetGameEnd()
@@ -112,7 +156,8 @@ public class GameManagement : MonoBehaviour
     {
         if (!endGame)
         {
-            logText.text = displayText;
+            string temp = "Day " + currDay + ":\n";
+            logText.text = temp + displayText + "\n" + logText.text;
         }
     }
 
@@ -128,10 +173,28 @@ public class GameManagement : MonoBehaviour
     public void CollectWaste(int num)
     {
         wasteCount += num;
-        statsText.text = "Pollutants cleared: " + wasteCount;
+
+        //statsText.text = "Pollutants cleared: " + wasteCount;
+        Debug.Log("Pollutants cleared: " + wasteCount);
+
         if (wasteCount >= wasteCountEnd)
         {
-            DisplayLogText("I have cleared enough pollutants, it seems the environment has been improved. This planet has become a suitable place to live. Would I like to stay here?."); // need to be before SetGameEnd()
+            string temp = "I have cleared enough pollutants, it seems the environment has been improved. This planet has become a suitable place to live. Would I like to stay here?.";
+            temp += "\n";
+            DisplayLogText(temp); // need to be before SetGameEnd()
+            SetGameEnd();
+            soundManagement.PlayRandomWinSound();
+        }
+    }
+
+    public void CollectGear(int num)
+    {
+        gearCount += num;
+        if (gearCount >= gearCountEnd)
+        {
+            string temp = "I have collected enough gears to build a new spaceship! I am ready for the new Journey!";
+            temp += "\n";
+            DisplayLogText(temp); // need to be before SetGameEnd()
             SetGameEnd();
             soundManagement.PlayRandomWinSound();
         }
