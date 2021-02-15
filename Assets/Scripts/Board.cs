@@ -110,17 +110,7 @@ public class Board : MonoBehaviour
 
                 if (rockTiles[i,j] == null)
                 {
-                    // Choose a random type of dots
-                    int currTileTypeNum = CalTileTypeNum();
-                    int dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
-
-                    //int maxIterations = 0;
-                    //while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
-                    //{
-                    //    dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
-                    //    maxIterations++;
-                    //    //Debug.Log(maxIterations);
-                    //}
+                    int dotToUse = GetDotToUse();
 
                     // Create a dot at (i,j) position
                     Vector2 tempPosition = new Vector2(i, j + offset);
@@ -311,19 +301,7 @@ public class Board : MonoBehaviour
                 {
                     Vector2 tempPosition = new Vector2(i, j + offset);
 
-                    int currTileTypeNum = CalTileTypeNum();
-                    int dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
-
-                    //int maxIterations = 0;
-                    //while (MatchesAt(i, j, dots[dotToUse]))
-                    //{
-                    //    maxIterations++;
-                    //    dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
-                    //    if (maxIterations > 100)
-                    //    {
-                    //        break;
-                    //    }
-                    //}
+                    int dotToUse = GetDotToUse();
 
                     GameObject piece = Instantiate(dots[dotToUse],
                       tempPosition, Quaternion.identity);
@@ -632,6 +610,32 @@ public class Board : MonoBehaviour
         }
     }
 
+    private float CalNonOxygenProb()
+    {
+        float freeTileRatio = CalFreeTileRatio();
+
+        if (freeTileRatio < 0.1f)
+        {
+            return 0.1f;
+        }
+        else if (freeTileRatio < 0.3f)
+        {
+            return 0.3f;
+        }
+        else if (freeTileRatio < 0.5f)
+        {
+            return 0.5f;
+        }
+        else if (freeTileRatio < 0.7f)
+        {
+            return 0.7f;
+        }
+        else
+        {
+            return 0.9f;
+        }
+    }
+
     public float CalFreeTileRatio()
     {
         int freeTileCount = CalFreeTileCount();
@@ -866,5 +870,30 @@ public class Board : MonoBehaviour
     {
         // need this public function to be called by other object; won't work otherwise
         StartCoroutine(DecreaseRowCo());
+    }
+
+    private int GetDotToUse()
+    {
+        int dotToUse = 0; // Default using the oxygen type
+
+        // decreasing oxygen with increasing free tiles
+        //float NonOxygenProb = CalNonOxygenProb();
+
+        if (Random.Range(0.0f, 1.0f) < 1.1f)
+        {
+            // Choose a random type of dots
+            int currTileTypeNum = CalTileTypeNum();
+            dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
+        }
+
+        //int maxIterations = 0;
+        //while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
+        //{
+        //    dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
+        //    maxIterations++;
+        //    //Debug.Log(maxIterations);
+        //}
+
+        return dotToUse;
     }
 }
