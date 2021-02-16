@@ -596,11 +596,11 @@ public class Board : MonoBehaviour
 
         float freeTileRatio = CalFreeTileRatio();
 
-        if (freeTileRatio < 0.1f)
+        if (freeTileRatio < 0.2f)
         {
             return 2;
         }
-        else if (freeTileRatio < 0.3f)
+        else if (freeTileRatio < 0.4f)
         {
             return 3;
         }

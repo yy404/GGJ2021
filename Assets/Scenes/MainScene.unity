@@ -2077,7 +2077,7 @@ MonoBehaviour:
     for the new Journey!
   goalMsgArea: Explored area
   goalMsgGear: Collected gears
-  wasteCountEnd: 200
+  wasteCountEnd: 300
   gearCountEnd: 200
   hardRockProbVal: 0.2
   shipProbVal: 0.2
