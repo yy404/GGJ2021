@@ -290,6 +290,7 @@ public class Board : MonoBehaviour
         //}
 
         currentState = GameState.move;
+        gameManagement.DisplayDialogueText("");
     }
 
     private void RefillBoard()
@@ -866,7 +867,6 @@ public class Board : MonoBehaviour
         ClearDotMark();
         ClearRockMark();
         seedMarkCount = 0;
-        gameManagement.DisplayDialogueText("");
 
         StartCoroutine(DecreaseRowCo());
     }

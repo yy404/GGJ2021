@@ -343,7 +343,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 0.5
-  m_Text: Know nothing
+  m_Text: Nothing
 --- !u!222 &212181660
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -387,7 +387,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -54}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &287355019
@@ -696,7 +696,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 31, y: 135}
+  m_AnchoredPosition: {x: 9, y: 118}
   m_SizeDelta: {x: 312.14423, y: 64.56596}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &417153497
@@ -809,7 +809,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Ship
+  m_Text: 'Spaceship
 
     Alpha'
 --- !u!222 &417318650
@@ -1285,7 +1285,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Build
+  m_Text: Craft!
 --- !u!222 &643651777
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2565,14 +2565,14 @@ MonoBehaviour:
   - "A new message from an old book: I hope we could protect the environment, but
     it\u2019s too late\u2026 This planet has been seriously polluted and we are going
     to die here."
-  - Blueprint?
+  - Possible blueprints or spaceships?
   introMsg: 'What happened? Oh, now I remember, my spaceship was hit by a meteorite.
     It seems I survived, but where am I? OK, let me see what I can find here. '
   endMsg: I have no idea what happened, but I found a brand new spaceship. I am ready
-    for the new Journey!
+    for the new journey!
   goalMsgArea: Explored area
   goalMsgGear: Collected gears
-  wasteCountEnd: 300
+  wasteCountEnd: 999
   hardRockProbVal: 0.2
   shipProbVal: 0.2
   feedbackText: {fileID: 2023733289}

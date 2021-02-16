@@ -50,7 +50,7 @@ public class BackgroundTile : MonoBehaviour
             {
                 specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
                 var thisMain = specialParticleVar.GetComponent<ParticleSystem>().main;
-                thisMain.startColor = new Color(1, 0, 1, .5f);
+                thisMain.startColor = new Color(1, 0, 1, .9f);
             }
         }
         else
@@ -170,11 +170,16 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (gameManagement != null && gameManagement.enableClickRock)
+        if (gameManagement != null)
         {
-            if (spriteRend != null)
+            gameManagement.DisplayDialogueText(GeneDialogueText());
+
+            if (gameManagement.enableClickRock)
             {
-                //spriteRend.material.color = Color.white;
+                //if(spriteRend != null)
+                //{
+                //    spriteRend.material.color = Color.white;
+                //}
                 Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto); // don't change cursor
             }
         }
@@ -182,13 +187,18 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseExit()
     {
-        if (gameManagement != null && gameManagement.enableClickRock)
+        if (gameManagement != null)
         {
-            if (spriteRend != null)
+            gameManagement.DisplayDialogueText("");
+
+            if (gameManagement.enableClickRock)
             {
-                //spriteRend.material.color = Color.black;
+                //if (spriteRend != null)
+                //{
+                //    //spriteRend.material.color = Color.black;
+                //}
+                Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto); // reset to default cursor
             }
-            Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto); // reset to default cursor
         }
     }
 
@@ -261,31 +271,31 @@ public class BackgroundTile : MonoBehaviour
 
         if (spriteRend.material.color == Color.black)
         {
-            answerStr = "Area to be explored";
+            answerStr = "Unexplored area";
         }
         else if (spriteRend.sprite == specialRock)
         {
-            answerStr = "Breakable rock";
+            answerStr = "Rock: breakable";
         }
         else if (spriteRend.sprite == wholeRock)
         {
-            answerStr = "NOT Breakable rock";
+            answerStr = "Rock: NOT breakable";
         }
         else if (spriteRend.sprite == box)
         {
-            answerStr = "Box";
+            answerStr = "Box: click to open";
         }
         else if (spriteRend.sprite == ship)
         {
-            answerStr = "Ship";
+            answerStr = "Ship: click to leave this planet";
         }
         else if (spriteRend.sprite == chip)
         {
-            answerStr = "Chip";
+            answerStr = "Data Chip: click to open";
         }
         else if (spriteRend.sprite == spriteTool)
         {
-            answerStr = "Workstation";
+            answerStr = "Workstation: click for crafting";
         }
         else
         {

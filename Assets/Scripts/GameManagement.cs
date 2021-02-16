@@ -69,10 +69,8 @@ public class GameManagement : MonoBehaviour
         currOxygen = maxOxygen;
         currDay = 0;
 
-        // popup display to be added
-        Debug.Log(introMsg);
-
         logText.text = "";
+        DisplayLogText(introMsg + "\n");
         IncreaseDay(); // so that actually starting from day 1
 
     }
@@ -206,7 +204,7 @@ public class GameManagement : MonoBehaviour
         gearCount += num;
         //if (gearCount >= gearCountEnd)
         //{
-        //    string temp = "I have collected enough gears to build a new spaceship! I am ready for the new Journey!";
+        //    string temp = "I have collected enough gears to build a new spaceship! I am ready for the new journey!";
         //    temp += "\n";
         //    DisplayLogText(temp); // need to be before SetGameEnd()
         //    SetGameEnd();
@@ -236,7 +234,7 @@ public class GameManagement : MonoBehaviour
 
                 CloseWindow();
 
-                string temp = "I built a spaceship! I am ready for the new Journey!";
+                string temp = "I made a spaceship! I am ready for the new journey!";
                 temp += "\n";
                 DisplayLogText(temp); // need to be before SetGameEnd()
                 SetGameEnd();

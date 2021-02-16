@@ -402,19 +402,19 @@ public class Dot : MonoBehaviour
 
         if (this.tag == "TileOxygen")
         {
-            answerStr = "Oxygen";
+            answerStr = "Oxygen: refilling O2 (necessary for living)";
         }
         else if (this.tag == "TileWaste")
         {
-            answerStr = "Waste";
+            answerStr = "Pollutant: consuming more oxygen this day";
         }
         else if (this.tag == "TileGear")
         {
-            answerStr = "Gear";
+            answerStr = "Gear: useful for crafting";
         }
         else if (this.tag == "TileSeed")
         {
-            answerStr = "Seed";
+            answerStr = "Seed: magic power connecting other objects";
         }
         else
         {
