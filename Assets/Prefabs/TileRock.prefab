@@ -101,6 +101,7 @@ MonoBehaviour:
   box: {fileID: 21300000, guid: af80216273afc954b96561a7c9c3006f, type: 3}
   ship: {fileID: 21300000, guid: 68b5a935fac33b042a01d7c5866b0007, type: 3}
   chip: {fileID: 21300000, guid: 93e792cc395bde244bace3dd9bcef70c, type: 3}
+  spriteTool: {fileID: 21300000, guid: 63fb13a44d6882b468da3376e5f19c1a, type: 3}
   cursorTextureOver: {fileID: 2800000, guid: d3df85d12187df947b7426c46a46f152, type: 3}
   cursorTextureDown: {fileID: 2800000, guid: 3cb64319cf49821429e3ce876ae9f013, type: 3}
   cursorTextureUp: {fileID: 2800000, guid: 4b362c1f7e7c92f47981c79cdb831dc2, type: 3}

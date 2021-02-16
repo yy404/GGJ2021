@@ -19,6 +19,7 @@ public class GameManagement : MonoBehaviour
     public int singleTileOxygenValPlus = 0;
 
     public GameObject endGamePanel;
+    public GameObject windowPanel;
 
     public bool enableClickRock = false;
 
@@ -42,10 +43,21 @@ public class GameManagement : MonoBehaviour
     public int wasteCountEnd = 200;
 
     private int gearCount = 0;
-    public int gearCountEnd = 100;
+    //public int gearCountEnd = 100;
 
     public float hardRockProbVal = 0.2f;
     public float shipProbVal = 0.2f;
+
+    private int buildShipVal = 5;
+    private int buildExpVal = 0;
+    private int buildExpDelta = 5;
+    private int buildExpMax = 25;
+    private int buildShipGearNum = 50;
+
+    public Text feedbackText;
+    public Text resourceText;
+    public Text equationText;
+
 
     // Start is called before the first frame update
     void Start()
@@ -114,7 +126,7 @@ public class GameManagement : MonoBehaviour
         if (board.CalFreeTileRatio() >= 0.1f)
         {
             thisDiary += goalMsgGear + ": " + gearCount;
-            thisDiary += "/" + gearCountEnd;
+            //thisDiary += "/" + gearCountEnd;
             thisDiary += "\n";
         }
 
@@ -138,6 +150,8 @@ public class GameManagement : MonoBehaviour
     public void SetGameEnd()
     {
         endGame = true;
+        board.currentState = GameState.pause;
+
         EndGameDisplay();
         soundManagement.DisableBGM();
     }
@@ -190,18 +204,112 @@ public class GameManagement : MonoBehaviour
     public void CollectGear(int num)
     {
         gearCount += num;
-        if (gearCount >= gearCountEnd)
-        {
-            string temp = "I have collected enough gears to build a new spaceship! I am ready for the new Journey!";
-            temp += "\n";
-            DisplayLogText(temp); // need to be before SetGameEnd()
-            SetGameEnd();
-            soundManagement.PlayRandomWinSound();
-        }
+        //if (gearCount >= gearCountEnd)
+        //{
+        //    string temp = "I have collected enough gears to build a new spaceship! I am ready for the new Journey!";
+        //    temp += "\n";
+        //    DisplayLogText(temp); // need to be before SetGameEnd()
+        //    SetGameEnd();
+        //    soundManagement.PlayRandomWinSound();
+        //}
     }
 
     public void DisplayDeltaText(string displayText)
     {
         deltaText.text = displayText;
+    }
+
+    public void BuildShip()
+    {
+        if (gearCount < buildShipGearNum)
+        {
+            feedbackText.text = "No enough resources";
+        }
+        else
+        {
+            gearCount -= buildShipGearNum;
+
+            bool isSuccessful = BuildShipActual();
+            if (isSuccessful)
+            {
+                feedbackText.text = "Successful";
+
+                CloseWindow();
+
+                string temp = "I built a spaceship! I am ready for the new Journey!";
+                temp += "\n";
+                DisplayLogText(temp); // need to be before SetGameEnd()
+                SetGameEnd();
+                soundManagement.PlayRandomWinSound();
+            }
+            else
+            {
+                feedbackText.text = "Failure";
+                buildExpVal = Mathf.Min(buildExpVal + buildExpDelta, buildExpMax);
+            }
+
+            UpdateResourceText();
+            UpdateEquationText();
+        }
+    }
+
+    private bool BuildShipActual()
+    {
+        float buildProb = GetBuildProb();
+        if (Random.Range(0.0f, 1.0f) <= buildProb)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private float GetBuildProb()
+    {
+        return (buildShipVal + buildExpVal) / 100.0f;
+    }
+
+    private void UpdateResourceText()
+    {
+        if (resourceText != null)
+        {
+            resourceText.text = "Gear: " + gearCount;
+            resourceText.text += "/" + buildShipGearNum;
+        }
+    }
+
+    private void UpdateEquationText()
+    {
+        if (equationText != null)
+        {
+            int probVal = buildShipVal + buildExpVal;
+
+            // right-aligned width 2
+            string temp = string.Format("{0,2}% + {1,2}% = {2,2}%", buildShipVal.ToString(), buildExpVal.ToString(), probVal.ToString());
+            equationText.text = temp;
+        }
+    }
+
+    public void OpenWindow()
+    {
+        if (windowPanel != null)
+        {
+            windowPanel.SetActive(true);
+            board.currentState = GameState.pause;
+            UpdateResourceText();
+            UpdateEquationText();
+            feedbackText.text = "";
+        }
+    }
+
+    public void CloseWindow()
+    {
+        if (windowPanel != null)
+        {
+            windowPanel.SetActive(false);
+            board.currentState = GameState.move;
+        }
     }
 }

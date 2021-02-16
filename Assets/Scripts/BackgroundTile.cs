@@ -10,6 +10,7 @@ public class BackgroundTile : MonoBehaviour
     public Sprite box;
     public Sprite ship;
     public Sprite chip;
+    public Sprite spriteTool;
 
     public Texture2D cursorTextureOver;
     public Texture2D cursorTextureDown;
@@ -28,6 +29,8 @@ public class BackgroundTile : MonoBehaviour
     public bool marked = false;
     private GameObject specialParticleVar = null;
 
+    private bool isWorkstation = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,17 +40,31 @@ public class BackgroundTile : MonoBehaviour
 
         spriteRend = GetComponent<SpriteRenderer>();
 
-        // default settings
-        spriteRend.sprite = specialRock;
-        spriteRend.material.color = Color.black;
-
-        if (board.ItemMap[column, row] == ItemType.None)
+        if ((column == 0) && (row == board.height - 1)) //top left
         {
-            if (Random.Range(0.0f, 1.0f) <= gameManagement.hardRockProbVal)
+            isWorkstation = true;
+            board.ItemMap[column, row] = ItemType.Workstation;
+            spriteRend.sprite = spriteTool;
+
+            if (specialParticleVar == null)
             {
-                //spriteRend.material.color = Color.white;
-                hitPoints = 999;
-                spriteRend.sprite = wholeRock;
+                specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
+            }
+        }
+        else
+        {
+            // default settings
+            spriteRend.sprite = specialRock;
+            spriteRend.material.color = Color.black;
+
+            if (board.ItemMap[column, row] == ItemType.None)
+            {
+                if (Random.Range(0.0f, 1.0f) <= gameManagement.hardRockProbVal)
+                {
+                    //spriteRend.material.color = Color.white;
+                    hitPoints = 999;
+                    spriteRend.sprite = wholeRock;
+                }
             }
         }
     }
@@ -63,33 +80,36 @@ public class BackgroundTile : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (spriteRend.material.color == Color.black)
+        if (!isWorkstation)
         {
-            spriteRend.material.color = Color.white;
-            board.exploredAreaCount++;
-        }
-        else
-        {
-            hitPoints -= damage;
-        }
-
-        if ((hitPoints == 0) && (board.ItemMap[column, row] != ItemType.None))
-        {
-            if (board.ItemMap[column, row] == ItemType.Ship)
+            if (spriteRend.material.color == Color.black)
             {
-                spriteRend.sprite = ship;
-            }
-            else if (board.ItemMap[column, row] == ItemType.Chip)
-            {
-                spriteRend.sprite = chip;
+                spriteRend.material.color = Color.white;
+                board.exploredAreaCount++;
             }
             else
             {
-                spriteRend.sprite = box;
+                hitPoints -= damage;
             }
-            if (specialParticleVar == null)
+
+            if ((hitPoints == 0) && (board.ItemMap[column, row] != ItemType.None))
             {
-                specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
+                if (board.ItemMap[column, row] == ItemType.Ship)
+                {
+                    spriteRend.sprite = ship;
+                }
+                else if (board.ItemMap[column, row] == ItemType.Chip)
+                {
+                    spriteRend.sprite = chip;
+                }
+                else
+                {
+                    spriteRend.sprite = box;
+                }
+                if (specialParticleVar == null)
+                {
+                    specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
+                }
             }
         }
     }
@@ -105,59 +125,36 @@ public class BackgroundTile : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (gameManagement != null && gameManagement.enableClickRock)
+        if (isWorkstation)
         {
-            gameManagement.IncreaseDay();
-            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
-
-            if (soundManagement != null)
+            if (gameManagement != null)
             {
-                soundManagement.PlayRandomDestroyNoise();
+                gameManagement.OpenWindow();
             }
-
-            TakeDamage(1);
-
-            Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
         }
-
-        if (hitPoints <= 0 && board.ItemMap[column, row] != ItemType.None)
+        else
         {
-            if (board.ItemMap[column, row] == ItemType.Chip)
+            // debug only
+            if (gameManagement != null && gameManagement.enableClickRock)
             {
-                // popup display to be added
-                Debug.Log(board.msgMap[column, row]);
-            }
-            else
-            {
-                gameManagement.DisplayLogText(board.msgMap[column, row]); // need to be before SetGameEnd()
-            }
-
-            if (board.ItemMap[column, row] == ItemType.Ship)
-            {
-                gameManagement.SetGameEnd();
-                soundManagement.PlayRandomWinSound();
-            }
-            else if (board.ItemMap[column, row] == ItemType.Chip)
-            {
-                Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
+                gameManagement.IncreaseDay();
+                gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
 
                 if (soundManagement != null)
                 {
-                    soundManagement.PlayRandomPickupNoise();
+                    soundManagement.PlayRandomDestroyNoise();
                 }
+
+                TakeDamage(1);
+
+                Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
             }
-            else if (board.ItemMap[column, row] == ItemType.Radar)
+
+            if (hitPoints <= 0 && board.ItemMap[column, row] != ItemType.None)
             {
-                Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
-                board.DisplayRadar();
-
-                if (soundManagement != null)
-                {
-                    soundManagement.PlayRandomPickupNoise();
-                }
+                PerformItem();
+                DestroyBackgroundTile();
             }
-
-            DestroyBackgroundTile(); 
         }
     }
 
@@ -206,5 +203,43 @@ public class BackgroundTile : MonoBehaviour
         Destroy(this.gameObject);
 
         board.DecreaseRowFunc();
+    }
+
+    private void PerformItem()
+    {
+        if (board.ItemMap[column, row] == ItemType.Chip)
+        {
+            // popup display to be added
+            Debug.Log(board.msgMap[column, row]);
+        }
+        else
+        {
+            gameManagement.DisplayLogText(board.msgMap[column, row]); // need to be before SetGameEnd()
+        }
+
+        if (board.ItemMap[column, row] == ItemType.Ship)
+        {
+            gameManagement.SetGameEnd();
+            soundManagement.PlayRandomWinSound();
+        }
+        else if (board.ItemMap[column, row] == ItemType.Chip)
+        {
+            Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
+
+            if (soundManagement != null)
+            {
+                soundManagement.PlayRandomPickupNoise();
+            }
+        }
+        else if (board.ItemMap[column, row] == ItemType.Radar)
+        {
+            Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
+            board.DisplayRadar();
+
+            if (soundManagement != null)
+            {
+                soundManagement.PlayRandomPickupNoise();
+            }
+        }
     }
 }

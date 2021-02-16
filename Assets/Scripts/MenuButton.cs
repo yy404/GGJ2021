@@ -6,12 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class MenuButton: MonoBehaviour
 {
+    private GameManagement gameManagement;
 
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-
-    //}
+    // Start is called before the first frame update
+    void Start()
+    {
+        gameManagement = FindObjectOfType<GameManagement>();
+    }
 
     //// Update is called once per frame
     //void Update()
@@ -29,5 +30,15 @@ public class MenuButton: MonoBehaviour
     {
         //Debug.Log("ExitGame button was clicked");
         Application.Quit();
+    }
+
+    public void CloseWindow()
+    {
+        gameManagement.CloseWindow();
+    }
+
+    public void BuildShip()
+    {
+        gameManagement.BuildShip();
     }
 }

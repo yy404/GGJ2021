@@ -6,7 +6,7 @@ public enum GameState
 {
     wait,
     move,
-    //pause,
+    pause,
 }
 
 public enum TileKind
@@ -25,6 +25,7 @@ public enum ItemType
     Ship,
     Radar,
     None,
+    Workstation,
 }
 
 public class Board : MonoBehaviour
@@ -479,7 +480,10 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                if ((i > initFreeColumnNum - 1) || (j < height - initFreeRowNum)) // leave x line(s) above
+                bool isTargetRange = (i > initFreeColumnNum - 1) || (j < height - initFreeRowNum); // leave x line(s) above
+                bool isWorkstation = (i == 0) && (j == height - 1); //top left
+
+                if (isTargetRange || isWorkstation) 
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     GameObject tile = Instantiate(rockTilePrefab, tempPosition, Quaternion.identity);
