@@ -90,6 +90,11 @@ public class Dot : MonoBehaviour
                 MarkIt(this.tag);
             }
         }
+
+        if (gameManagement.dialogueText.text == "")
+        {
+            gameManagement.DisplayDialogueText(GeneDialogueText());
+        }
     }
 
     private void OnMouseDown()
@@ -144,6 +149,8 @@ public class Dot : MonoBehaviour
         {
             marked = true;
             MarkIt(this.tag);
+
+            gameManagement.DisplayDialogueText(GeneDialogueText());
         }
     }
 
@@ -153,6 +160,7 @@ public class Dot : MonoBehaviour
         board.ClearRockMark();
         board.seedMarkCount = 0;
         gameManagement.DisplayDeltaText("");
+        gameManagement.DisplayDialogueText("");
     }
 
     void CalculateAngle()
@@ -386,5 +394,33 @@ public class Dot : MonoBehaviour
                 gameManagement.DisplayDeltaText("" + tempOxygenVal);
             }
         }
+    }
+
+    private string GeneDialogueText()
+    {
+        string answerStr = "";
+
+        if (this.tag == "TileOxygen")
+        {
+            answerStr = "Oxygen";
+        }
+        else if (this.tag == "TileWaste")
+        {
+            answerStr = "Waste";
+        }
+        else if (this.tag == "TileGear")
+        {
+            answerStr = "Gear";
+        }
+        else if (this.tag == "TileSeed")
+        {
+            answerStr = "Seed";
+        }
+        else
+        {
+            answerStr = "N/A";
+        }
+
+        return answerStr;
     }
 }

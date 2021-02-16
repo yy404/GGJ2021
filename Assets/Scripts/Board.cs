@@ -866,6 +866,7 @@ public class Board : MonoBehaviour
         ClearDotMark();
         ClearRockMark();
         seedMarkCount = 0;
+        gameManagement.DisplayDialogueText("");
 
         StartCoroutine(DecreaseRowCo());
     }

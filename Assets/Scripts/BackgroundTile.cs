@@ -49,6 +49,8 @@ public class BackgroundTile : MonoBehaviour
             if (specialParticleVar == null)
             {
                 specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
+                var thisMain = specialParticleVar.GetComponent<ParticleSystem>().main;
+                thisMain.startColor = new Color(1, 0, 1, .5f);
             }
         }
         else
@@ -111,6 +113,14 @@ public class BackgroundTile : MonoBehaviour
                     specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
                 }
             }
+        }
+    }
+
+    private void OnMouseOver()
+    {
+        if (gameManagement.dialogueText.text == "")
+        {
+            gameManagement.DisplayDialogueText(GeneDialogueText());
         }
     }
 
@@ -241,5 +251,45 @@ public class BackgroundTile : MonoBehaviour
                 soundManagement.PlayRandomPickupNoise();
             }
         }
+    }
+
+    private string GeneDialogueText()
+    {
+        string answerStr = "";
+
+        if (spriteRend.material.color == Color.black)
+        {
+            answerStr = "Area to be explored";
+        }
+        else if (spriteRend.sprite == specialRock)
+        {
+            answerStr = "Breakable rock";
+        }
+        else if (spriteRend.sprite == wholeRock)
+        {
+            answerStr = "NOT Breakable rock";
+        }
+        else if (spriteRend.sprite == box)
+        {
+            answerStr = "Box";
+        }
+        else if (spriteRend.sprite == ship)
+        {
+            answerStr = "Ship";
+        }
+        else if (spriteRend.sprite == chip)
+        {
+            answerStr = "Chip";
+        }
+        else if (spriteRend.sprite == spriteTool)
+        {
+            answerStr = "Workstation";
+        }
+        else
+        {
+            answerStr = "N/A";
+        }
+
+        return answerStr;
     }
 }
