@@ -220,11 +220,13 @@ public class BackgroundTile : MonoBehaviour
         if (board.ItemMap[column, row] == ItemType.Chip)
         {
             // popup display to be added
-            Debug.Log(board.msgMap[column, row]);
+            //Debug.Log(board.msgMap[column, row]);
+
+            gameManagement.DisplayLogText(board.msgMap[column, row] + "\n"); // need to be before SetGameEnd()
         }
         else
         {
-            gameManagement.DisplayLogText(board.msgMap[column, row]); // need to be before SetGameEnd()
+            gameManagement.DisplayLogText(board.msgMap[column, row] + "\n"); // need to be before SetGameEnd()
         }
 
         if (board.ItemMap[column, row] == ItemType.Ship)

@@ -123,7 +123,7 @@ public class GameManagement : MonoBehaviour
     {
         string thisDiary = "";
 
-        if (board.CalFreeTileRatio() >= 0.1f)
+        if (gearCount > 0)
         {
             thisDiary += goalMsgGear + ": " + gearCount;
             //thisDiary += "/" + gearCountEnd;
@@ -170,8 +170,8 @@ public class GameManagement : MonoBehaviour
     {
         if (!endGame)
         {
-            string temp = "Day " + currDay + ":\n";
-            logText.text = temp + displayText + "\n" + logText.text;
+            string temp = "<Day " + currDay + ">\n";
+            logText.text = temp + displayText + logText.text;
         }
     }
 
