@@ -214,7 +214,7 @@ public class Board : MonoBehaviour
 
             //sound
 
-            // particle 
+            // particle
             GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[column, row].transform.position, Quaternion.identity);
             var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
             textureSheetAnimation.AddSprite(allDots[column, row].GetComponent<SpriteRenderer>().sprite);
@@ -482,9 +482,8 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 bool isTargetRange = (i > initFreeColumnNum - 1) || (j < height - initFreeRowNum); // leave x line(s) above
-                bool isWorkstation = (i == 0) && (j == height - 1); //top left
 
-                if (isTargetRange || isWorkstation) 
+                if (isTargetRange)
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     GameObject tile = Instantiate(rockTilePrefab, tempPosition, Quaternion.identity);
@@ -731,12 +730,17 @@ public class Board : MonoBehaviour
         }
 
         // adding ship(s)
-        if (Random.Range(0.0f, 1.0f) <= gameManagement.shipProbVal)
+        if (Random.Range(0.0f, 1.0f) < gameManagement.shipProbVal) // to be improved
         {
             for (int i = 0; i < 1; i++)
             {
                 AddItemToMap(ItemType.Ship, gameManagement.endMsg);
             }
+        }
+
+        for (int i = 0; i < 1; i++)
+        {
+            AddItemToMap(ItemType.Workstation, "Workstation");
         }
 
         // adding chips
@@ -842,7 +846,7 @@ public class Board : MonoBehaviour
                         gameManagement.CollectGear(1);
                     }
 
-                    // particle 
+                    // particle
                     GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
                     var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
                     textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);

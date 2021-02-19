@@ -40,33 +40,17 @@ public class BackgroundTile : MonoBehaviour
 
         spriteRend = GetComponent<SpriteRenderer>();
 
-        if ((column == 0) && (row == board.height - 1)) //top left
-        {
-            isWorkstation = true;
-            board.ItemMap[column, row] = ItemType.Workstation;
-            spriteRend.sprite = spriteTool;
+        // default settings
+        spriteRend.sprite = specialRock;
+        spriteRend.material.color = Color.black;
 
-            if (specialParticleVar == null)
-            {
-                specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
-                var thisMain = specialParticleVar.GetComponent<ParticleSystem>().main;
-                thisMain.startColor = new Color(1, 0, 1, .9f);
-            }
-        }
-        else
+        if (board.ItemMap[column, row] == ItemType.None)
         {
-            // default settings
-            spriteRend.sprite = specialRock;
-            spriteRend.material.color = Color.black;
-
-            if (board.ItemMap[column, row] == ItemType.None)
+            if (Random.Range(0.0f, 1.0f) <= gameManagement.hardRockProbVal) // to be improved
             {
-                if (Random.Range(0.0f, 1.0f) <= gameManagement.hardRockProbVal)
-                {
-                    //spriteRend.material.color = Color.white;
-                    hitPoints = 999;
-                    spriteRend.sprite = wholeRock;
-                }
+                //spriteRend.material.color = Color.white;
+                hitPoints = 999;
+                spriteRend.sprite = wholeRock;
             }
         }
     }
@@ -103,6 +87,18 @@ public class BackgroundTile : MonoBehaviour
                 else if (board.ItemMap[column, row] == ItemType.Chip)
                 {
                     spriteRend.sprite = chip;
+                }
+                else if (board.ItemMap[column, row] == ItemType.Workstation)
+                {
+                    isWorkstation = true;
+                    spriteRend.sprite = spriteTool;
+
+                    if (specialParticleVar == null)
+                    {
+                        specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
+                        var thisMain = specialParticleVar.GetComponent<ParticleSystem>().main;
+                        thisMain.startColor = new Color(1, 0, 1, .9f);
+                    }
                 }
                 else
                 {

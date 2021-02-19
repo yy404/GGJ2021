@@ -2574,7 +2574,7 @@ MonoBehaviour:
   goalMsgGear: Collected gears
   wasteCountEnd: 999
   hardRockProbVal: 0.2
-  shipProbVal: 0.2
+  shipProbVal: 0
   feedbackText: {fileID: 2023733289}
   resourceText: {fileID: 1846029867}
   equationText: {fileID: 1165957643}
