@@ -26,6 +26,8 @@ public class Dot : MonoBehaviour
     public bool marked = false;
     public SpriteRenderer spriteRend;
 
+    public ElemType elemType = ElemType.Void;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,16 @@ public class Dot : MonoBehaviour
         findMatches = FindObjectOfType<FindMatches>();
         gameManagement = FindObjectOfType<GameManagement>();
         spriteRend = GetComponent<SpriteRenderer>();
+
+        if (this.tag == "TileElem")
+        {
+            // int currTileTypeNum = board.CalTileTypeNum();
+            // elemType = (ElemType) Random.Range(0, Mathf.Min(5, currTileTypeNum));
+
+            elemType = (ElemType) Random.Range(0,5);
+
+            SetColorByElemType();
+        }
     }
 
     // Update is called once per frame
@@ -87,7 +99,7 @@ public class Dot : MonoBehaviour
             if (board.currentState == GameState.move)
             {
                 marked = true;
-                MarkIt(this.tag);
+                MarkIt(this.tag, elemType);
             }
         }
 
@@ -125,12 +137,31 @@ public class Dot : MonoBehaviour
         //    gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
         //}
 
-        if (board.dotMarkCount > 1)
+        // bool isValid = board.dotMarkCount > 1 || elemType == ElemType.Void;
+        bool isValid = board.dotMarkCount > 0;
+
+        if (isValid)
         {
             // decrease oxygen firstly to make the logic correct
-            gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
+            if (board.dotMarkCount > 1)
+            {
+                // normal consumption
+                gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
+                board.DestroyAllMarked();
+            }
+            else
+            {
+                // penalty consumption
+                gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption * gameManagement.oxygenConsumptionMulti);
+                board.DestroyAllMarked();
 
-            board.DestroyAllMarked();
+                // TransformElemType();
+                // board.ClearDotMark();
+                // board.ClearRockMark();
+                // board.seedMarkCount = 0;
+                // gameManagement.DisplayDeltaText("");
+                // gameManagement.DisplayDialogueText("");
+            }
 
             gameManagement.IncreaseDay(); // need to be after DestroyAllMarked() to avoid incorrect display
         }
@@ -148,7 +179,7 @@ public class Dot : MonoBehaviour
         if (board.currentState == GameState.move)
         {
             marked = true;
-            MarkIt(this.tag);
+            MarkIt(this.tag, elemType);
 
             gameManagement.DisplayDialogueText(GeneDialogueText());
         }
@@ -259,140 +290,116 @@ public class Dot : MonoBehaviour
 
     }
 
-    public void MarkIt(string thisTag)
+    public void MarkIt(string thisTag, ElemType thisElemType)
     {
-        spriteRend.material.color = Color.yellow;
+        SetColorAlphaVal(0.5f);
+
         board.dotMarkCount++;
-        board.MarkRock(column, row);
+
+        if (elemType != ElemType.Void)
+        {
+            board.MarkRock(column, row);
+        }
 
         if (column > 0)
         {
             // board.allDots[column - 1, row]
             GameObject theOtherDot = board.allDots[column - 1, row];
-            if (theOtherDot != null)
-            {
-                Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
-                if (!theOtherDotComp.marked)
-                {
-                    if (theOtherDotComp.tag == thisTag)
-                    {
-                        theOtherDotComp.marked = true;
-                        theOtherDotComp.MarkIt(thisTag);
-                    }
-                    else if (theOtherDotComp.tag == "TileSeed")
-                    {
-                        theOtherDotComp.marked = true;
-                        board.seedMarkCount++;
-                        theOtherDotComp.MarkIt(thisTag);
-                    }
-                }
-            }
+            MarkTheOtherDot(theOtherDot, thisTag, thisElemType);
         }
         if (column < board.width - 1)
         {
             // board.allDots[column + 1, row]
             GameObject theOtherDot = board.allDots[column + 1, row];
-            if (theOtherDot != null)
-            {
-                Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
-                if (!theOtherDotComp.marked)
-                {
-                    if (theOtherDotComp.tag == thisTag)
-                    {
-                        theOtherDotComp.marked = true;
-                        theOtherDotComp.MarkIt(thisTag);
-                    }
-                    else if (theOtherDotComp.tag == "TileSeed")
-                    {
-                        theOtherDotComp.marked = true;
-                        board.seedMarkCount++;
-                        theOtherDotComp.MarkIt(thisTag);
-                    }
-                }
-            }
+            MarkTheOtherDot(theOtherDot, thisTag, thisElemType);
         }
         if (row > 0)
         {
             // board.allDots[column, row - 1]
             GameObject theOtherDot = board.allDots[column, row - 1];
-            if (theOtherDot != null)
-            {
-                Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
-                if (!theOtherDotComp.marked)
-                {
-                    if (theOtherDotComp.tag == thisTag)
-                    {
-                        theOtherDotComp.marked = true;
-                        theOtherDotComp.MarkIt(thisTag);
-                    }
-                    else if (theOtherDotComp.tag == "TileSeed")
-                    {
-                        theOtherDotComp.marked = true;
-                        board.seedMarkCount++;
-                        theOtherDotComp.MarkIt(thisTag);
-                    }
-                }
-            }
+            MarkTheOtherDot(theOtherDot, thisTag, thisElemType);
         }
         if (row < board.height - 1)
         {
             // board.allDots[column, row + 1]
             GameObject theOtherDot = board.allDots[column, row + 1];
-            if (theOtherDot != null)
-            {
-                Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
-                if (!theOtherDotComp.marked)
-                {
-                    if (theOtherDotComp.tag == thisTag)
-                    {
-                        theOtherDotComp.marked = true;
-                        theOtherDotComp.MarkIt(thisTag);
-                    }
-                    else if (theOtherDotComp.tag == "TileSeed")
-                    {
-                        theOtherDotComp.marked = true;
-                        board.seedMarkCount++;
-                        theOtherDotComp.MarkIt(thisTag);
-                    }
-                }
-            }
+            MarkTheOtherDot(theOtherDot, thisTag, thisElemType);
         }
 
         // to be optimised
-        if (board.dotMarkCount > 1)
+        // if (board.dotMarkCount > 1)
+        // {
+        //     UpdateDeltaText(thisTag);
+        // }
+    }
+
+    private void MarkTheOtherDot(GameObject theOtherDot, string thisTag, ElemType thisElemType)
+    {
+        if (theOtherDot != null)
         {
-            int tempOxygenVal = -1 * gameManagement.oxygenDailyConsumption;
-            if (thisTag == "TileOxygen")
+            Dot theOtherDotComp = theOtherDot.GetComponent<Dot>();
+            if (!theOtherDotComp.marked)
             {
-                tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * gameManagement.singleTileOxygenVal;
-                //if (board.seedMarkCount > 0)
-                //{
-                //    // bonus adding 1 for each tile
-                //    tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * 1;
-                //}
-            }
-            else if (thisTag == "TileWaste")
-            {
-                tempOxygenVal -= (board.dotMarkCount - board.seedMarkCount) * gameManagement.singleTileWasteVal;
-                if (board.seedMarkCount > 0)
+                if (thisTag == "TileElem")
                 {
-                    // bonus adding 1 for each tile
-                    tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * 1;
+                    if (thisElemType == ElemType.Void)
+                    {
+                        // pass
+                    }
+                    else if (thisElemType == theOtherDotComp.elemType)
+                    {
+                        theOtherDotComp.marked = true;
+                        theOtherDotComp.MarkIt(thisTag, thisElemType);
+                    }
+                }
+                else if (theOtherDotComp.tag == thisTag)
+                {
+                    theOtherDotComp.marked = true;
+                    theOtherDotComp.MarkIt(thisTag, thisElemType);
+                }
+                else if (theOtherDotComp.tag == "TileSeed")
+                {
+                    theOtherDotComp.marked = true;
+                    board.seedMarkCount++;
+                    theOtherDotComp.MarkIt(thisTag, thisElemType);
                 }
             }
-            else if (thisTag == "TileSeed")
-            {
-                tempOxygenVal += board.dotMarkCount * gameManagement.singleTileOxygenValPlus;
-            }
+        }
+    }
 
-            if (tempOxygenVal > 0)
+    private void UpdateDeltaText(string thisTag)
+    {
+        int tempOxygenVal = -1 * gameManagement.oxygenDailyConsumption;
+        if (thisTag == "TileOxygen")
+        {
+            tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * gameManagement.singleTileOxygenVal;
+            //if (board.seedMarkCount > 0)
+            //{
+            //    // bonus adding 1 for each tile
+            //    tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * 1;
+            //}
+        }
+        else if (thisTag == "TileWaste")
+        {
+            tempOxygenVal -= (board.dotMarkCount - board.seedMarkCount) * gameManagement.singleTileWasteVal;
+            if (board.seedMarkCount > 0)
             {
-                gameManagement.DisplayDeltaText("+" + tempOxygenVal);
+                // bonus adding 1 for each tile
+                tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * 1;
             }
-            else
-            {
-                gameManagement.DisplayDeltaText("" + tempOxygenVal);
-            }
+        }
+        else if (thisTag == "TileSeed")
+        {
+            tempOxygenVal += board.dotMarkCount * gameManagement.singleTileOxygenValPlus;
+        }
+
+        if (tempOxygenVal > 0)
+        {
+            gameManagement.DisplayDeltaText("+" + tempOxygenVal);
+        }
+        else
+        {
+            gameManagement.DisplayDeltaText("" + tempOxygenVal);
         }
     }
 
@@ -422,5 +429,83 @@ public class Dot : MonoBehaviour
         }
 
         return answerStr;
+    }
+
+    public void SetColorByElemType()
+    {
+        Color color = Color.white;
+
+        if (elemType == ElemType.Metal)
+        {
+            color = Color.black;
+        }
+        else if (elemType == ElemType.Water)
+        {
+            color = Color.blue;
+        }
+        else if (elemType == ElemType.Wood)
+        {
+            color = Color.green;
+        }
+        else if (elemType == ElemType.Fire)
+        {
+            color = Color.red;
+        }
+        else if (elemType == ElemType.Soil)
+        {
+            color = Color.yellow;
+        }
+        else
+        {
+            // pass
+        }
+
+        spriteRend.material.color = color;
+
+        // SetColorAlphaVal();
+    }
+
+    private void SetColorAlphaVal(float alphaVal = 0.3f)
+    {
+        Color tempColor = spriteRend.material.color;
+        tempColor.a = alphaVal;
+        spriteRend.material.color = tempColor;
+    }
+
+    public void TransformElemType()
+    {
+        // if (elemType == ElemType.Metal)
+        // {
+        //     elemType = ElemType.Water;
+        // }
+        // else if (elemType == ElemType.Water)
+        // {
+        //     elemType = ElemType.Wood;
+        // }
+        // else if (elemType == ElemType.Wood)
+        // {
+        //     elemType = ElemType.Fire;
+        // }
+        // else if (elemType == ElemType.Fire)
+        // {
+        //     elemType = ElemType.Soil;
+        // }
+        // else if (elemType == ElemType.Soil)
+        // {
+        //     elemType = ElemType.Metal;
+        // }
+        // else
+        // {
+        //     // pass
+        // }
+
+        ElemType tempType = elemType;
+        while (tempType == elemType)
+        {
+            tempType = (ElemType) Random.Range(0,5);
+        }
+        elemType = tempType;
+
+        SetColorByElemType();
     }
 }

@@ -10,6 +10,8 @@ public class BackgroundTile : MonoBehaviour
     public Sprite box;
     public Sprite ship;
     public Sprite chip;
+    public Sprite oxygen;
+    public Sprite waste;
     public Sprite spriteTool;
 
     public Texture2D cursorTextureOver;
@@ -87,6 +89,14 @@ public class BackgroundTile : MonoBehaviour
                 else if (board.ItemMap[column, row] == ItemType.Chip)
                 {
                     spriteRend.sprite = chip;
+                }
+                else if (board.ItemMap[column, row] == ItemType.Oxygen)
+                {
+                    spriteRend.sprite = oxygen;
+                }
+                else if (board.ItemMap[column, row] == ItemType.Waste)
+                {
+                    spriteRend.sprite = waste;
                 }
                 else if (board.ItemMap[column, row] == ItemType.Workstation)
                 {
@@ -253,6 +263,24 @@ public class BackgroundTile : MonoBehaviour
         {
             Instantiate(chipParticle, this.gameObject.transform.position, Quaternion.identity);
             board.DisplayRadar();
+
+            if (soundManagement != null)
+            {
+                soundManagement.PlayRandomPickupNoise();
+            }
+        }
+        else if (board.ItemMap[column, row] == ItemType.Oxygen)
+        {
+            gameManagement.ConsumeOxygen(gameManagement.itemOxygenVal * -1);
+
+            if (soundManagement != null)
+            {
+                soundManagement.PlayRandomPickupNoise();
+            }
+        }
+        else if (board.ItemMap[column, row] == ItemType.Waste)
+        {
+            gameManagement.ConsumeOxygen(gameManagement.itemWasteVal * 1);
 
             if (soundManagement != null)
             {

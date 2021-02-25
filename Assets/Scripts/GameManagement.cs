@@ -52,12 +52,18 @@ public class GameManagement : MonoBehaviour
     private int buildExpVal = 0;
     private int buildExpDelta = 5;
     private int buildExpMax = 25;
-    private int buildShipGearNum = 50;
+    private int buildShipGearNum = 5;
 
     public Text feedbackText;
     public Text resourceText;
     public Text equationText;
 
+    public int oxygenItemNum;
+    public int wasteItemNum;
+    public int itemOxygenVal = 20;
+    public int itemWasteVal = 10;
+
+    public int oxygenConsumptionMulti = 1;
 
     // Start is called before the first frame update
     void Start()

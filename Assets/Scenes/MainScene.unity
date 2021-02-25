@@ -518,10 +518,7 @@ MonoBehaviour:
   rockTilePrefab: {fileID: 5197373523682421405, guid: 36e5c9f8dbfbe0b4fb79a66287185b1f,
     type: 3}
   dots:
-  - {fileID: 6811152819448279191, guid: 0f95dda36e41a5a4dbf9e9d7876e0269, type: 3}
-  - {fileID: 7692374423141688322, guid: db8b5654ee6449845bc992bb1a5958aa, type: 3}
-  - {fileID: 2057935957443175659, guid: d4d91b8ac459cf346a16a10f49cbe985, type: 3}
-  - {fileID: 7692374423141688322, guid: 3dc766a1ccad00d49b3cc5982399eaf6, type: 3}
+  - {fileID: 7692374423141688322, guid: 2590e3f292a4a4ef4b185e2a3a77c76d, type: 3}
   spriteParticle: {fileID: 23462556589404678, guid: 5cd32c1f670123247889834726e7fb16,
     type: 3}
   rockTileCount: 48
@@ -2541,7 +2538,7 @@ MonoBehaviour:
   statsText: {fileID: 1161305852}
   deltaText: {fileID: 1279507213}
   maxOxygen: 100
-  oxygenDailyConsumption: 3
+  oxygenDailyConsumption: 2
   singleTileOxygenVal: 3
   singleTileWasteVal: 2
   singleTileOxygenValPlus: 0
@@ -2578,6 +2575,11 @@ MonoBehaviour:
   feedbackText: {fileID: 2023733289}
   resourceText: {fileID: 1846029867}
   equationText: {fileID: 1165957643}
+  oxygenItemNum: 15
+  wasteItemNum: 15
+  itemOxygenVal: 10
+  itemWasteVal: 20
+  oxygenConsumptionMulti: 1
 --- !u!1 &1486602214
 GameObject:
   m_ObjectHideFlags: 0

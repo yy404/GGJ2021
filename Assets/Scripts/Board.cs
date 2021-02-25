@@ -21,11 +21,24 @@ public enum ItemType
     Box,
     //Blueprint,
     Chip,
+    Oxygen,
+    Radar,
     //Seed,
     Ship,
-    Radar,
     None,
+    Waste,
     Workstation,
+}
+
+public enum ElemType
+{
+    Metal,
+    Water,
+    Wood,
+    Fire,
+    Soil,
+    Void,
+    // Wind,
 }
 
 public class Board : MonoBehaviour
@@ -477,11 +490,15 @@ public class Board : MonoBehaviour
 
     private void GenerateRockTiles()
     {
+        int targetI = Random.Range(0,width);
+        int targetJ = Random.Range(0,height);
+
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                bool isTargetRange = (i > initFreeColumnNum - 1) || (j < height - initFreeRowNum); // leave x line(s) above
+                // bool isTargetRange = (i > initFreeColumnNum - 1) || (j < height - initFreeRowNum); // leave x line(s) above
+                bool isTargetRange = !((i == targetI) && (j == targetJ));
 
                 if (isTargetRange)
                 {
@@ -593,24 +610,51 @@ public class Board : MonoBehaviour
         currDepth = Mathf.Max(currDepth, thisDepth);
     }
 
-    private int CalTileTypeNum()
+    public int CalTileTypeNum()
     {
         // add a new type every two more depth
         //return currDepth/2 + 1;
 
-        float freeTileRatio = CalFreeTileRatio();
+        // float freeTileRatio = CalFreeTileRatio();
+        //
+        // if (freeTileRatio < 0.2f)
+        // {
+        //     return 2;
+        // }
+        // else if (freeTileRatio < 0.4f)
+        // {
+        //     return 3;
+        // }
+        // else
+        // {
+        //     return 4;
+        // }
 
-        if (freeTileRatio < 0.2f)
+        int freeTileCount = CalFreeTileCount();
+
+        if (freeTileCount < 4)
+        {
+            return 1;
+        }
+        else if (freeTileCount < 9)
         {
             return 2;
         }
-        else if (freeTileRatio < 0.4f)
+        else if (freeTileCount < 16)
         {
             return 3;
         }
-        else
+        else if (freeTileCount < 36)
         {
             return 4;
+        }
+        else if (freeTileCount < 64)
+        {
+            return 5;
+        }
+        else
+        {
+            return 5;
         }
     }
 
@@ -743,11 +787,22 @@ public class Board : MonoBehaviour
             AddItemToMap(ItemType.Workstation, "Workstation");
         }
 
-        // adding chips
-        for (int i = 0; i < gameManagement.chipMsg.Length; i++)
+        // // adding chips
+        // for (int i = 0; i < gameManagement.chipMsg.Length; i++)
+        // {
+        //     AddItemToMap(ItemType.Chip, gameManagement.chipMsg[i]);
+        // }
+
+        for (int i = 0; i < gameManagement.oxygenItemNum; i++)
         {
-            AddItemToMap(ItemType.Chip, gameManagement.chipMsg[i]);
+            AddItemToMap(ItemType.Oxygen, "Oxygen");
         }
+
+        for (int i = 0; i < gameManagement.wasteItemNum; i++)
+        {
+            AddItemToMap(ItemType.Waste, "Waste");
+        }
+
     }
 
     public void DisplayRadar()
@@ -781,8 +836,9 @@ public class Board : MonoBehaviour
             {
                 if (allDots[i, j] != null)
                 {
-                    allDots[i, j].GetComponent<Dot>().marked = false;
-                    allDots[i, j].GetComponent<Dot>().spriteRend.material.color = Color.white;
+                    Dot thisDot = allDots[i, j].GetComponent<Dot>();
+                    thisDot.marked = false;
+                    thisDot.SetColorByElemType();
                 }
             }
         }
@@ -807,6 +863,7 @@ public class Board : MonoBehaviour
     public void DestroyAllMarked()
     {
         bool anyMarked = false;
+        bool anyDestroyed = false;
 
         for (int i = 0; i < width; i++)
         {
@@ -814,47 +871,31 @@ public class Board : MonoBehaviour
             {
                 if (rockTiles[i, j] != null && rockTiles[i, j].marked)
                 {
-                    rockTiles[i, j].TakeDamage(1);
-                    anyMarked = true;
+                    if (dotMarkCount > 0)
+                    {
+                        rockTiles[i, j].TakeDamage(1);
+                        anyMarked = true;
+                    }
                 }
 
                 if (allDots[i, j] != null && allDots[i, j].GetComponent<Dot>().marked)
                 {
-                    if (allDots[i, j].tag == "TileOxygen")
+                    if (allDots[i, j].tag == "TileElem")
                     {
-                        gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenVal * -1); // add
-                        //if (seedMarkCount > 0)
-                        //{
-                        //    gameManagement.ConsumeOxygen(-1); // add one more as bonus
-                        //}
-                    }
-                    else if (allDots[i, j].tag == "TileWaste")
-                    {
-                        gameManagement.ConsumeOxygen(gameManagement.singleTileWasteVal);
-                        gameManagement.CollectWaste(1);
-                        if (seedMarkCount > 0)
+                        bool isDestroyed = ProcessByElemType(i,j);
+                        if (isDestroyed)
                         {
-                            gameManagement.ConsumeOxygen(-1); // add one more as bonus
+                            anyDestroyed = true;
                         }
                     }
-                    else if (allDots[i, j].tag == "TileSeed")
+                    else
                     {
-                        gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenValPlus * -1); // add
+                        bool isDestroyed = ProcessByTileTag(i,j);
+                        if (isDestroyed)
+                        {
+                            anyDestroyed = true;
+                        }
                     }
-                    else if (allDots[i, j].tag == "TileGear")
-                    {
-                        gameManagement.CollectGear(1);
-                    }
-
-                    // particle
-                    GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
-                    var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
-                    textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
-
-                    //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
-                    Destroy(allDots[i, j]);
-                    allDots[i, j] = null;
-
                     anyMarked = true;
                 }
             }
@@ -867,12 +908,15 @@ public class Board : MonoBehaviour
         }
 
         // avoid using outdated info
-        currentState = GameState.wait;
         ClearDotMark();
         ClearRockMark();
         seedMarkCount = 0;
 
-        StartCoroutine(DecreaseRowCo());
+        if (anyDestroyed)
+        {
+            currentState = GameState.wait;
+            StartCoroutine(DecreaseRowCo());
+        }
     }
 
     public void DecreaseRowFunc()
@@ -904,5 +948,102 @@ public class Board : MonoBehaviour
         //}
 
         return dotToUse;
+    }
+
+    private bool ProcessByTileTag(int i, int j)
+    {
+        bool isDestroyed = false;
+
+        if (allDots[i, j].tag == "TileOxygen")
+        {
+            gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenVal * -1); // add
+            //if (seedMarkCount > 0)
+            //{
+            //    gameManagement.ConsumeOxygen(-1); // add one more as bonus
+            //}
+        }
+        else if (allDots[i, j].tag == "TileWaste")
+        {
+            gameManagement.ConsumeOxygen(gameManagement.singleTileWasteVal);
+            gameManagement.CollectWaste(1);
+            if (seedMarkCount > 0)
+            {
+                gameManagement.ConsumeOxygen(-1); // add one more as bonus
+            }
+        }
+        else if (allDots[i, j].tag == "TileSeed")
+        {
+            gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenValPlus * -1); // add
+        }
+        else if (allDots[i, j].tag == "TileGear")
+        {
+            gameManagement.CollectGear(1);
+        }
+
+        // particle
+        GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
+        var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
+        textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
+
+        //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
+        Destroy(allDots[i, j]);
+        allDots[i, j] = null;
+        isDestroyed = true;
+
+        return isDestroyed;
+
+    }
+
+    private bool ProcessByElemType(int i, int j)
+    {
+        bool isDestroyed = false;
+
+        Dot thisDot = allDots[i, j].GetComponent<Dot>();
+        if (thisDot.elemType == ElemType.Void)
+        {
+            thisDot.elemType = (ElemType) Random.Range(0,5);
+            thisDot.SetColorByElemType();
+        }
+        else
+        {
+            if (dotMarkCount > 1)
+            {
+                if (thisDot.elemType == ElemType.Metal)
+                {
+                    gameManagement.CollectGear(1);
+                }
+
+                // particle
+                GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
+                var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
+                textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
+
+                //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
+                Destroy(allDots[i, j]);
+                allDots[i, j] = null;
+                isDestroyed = true;
+            }
+            else
+            {
+                // thisDot.TransformElemType();
+
+                if (thisDot.elemType == ElemType.Metal)
+                {
+                    gameManagement.CollectGear(1);
+                }
+
+                // particle
+                GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
+                var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
+                textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
+
+                //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
+                Destroy(allDots[i, j]);
+                allDots[i, j] = null;
+                isDestroyed = true;
+            }
+        }
+
+        return isDestroyed;
     }
 }
