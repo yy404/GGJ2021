@@ -41,4 +41,19 @@ public class MenuButton: MonoBehaviour
     {
         gameManagement.BuildShip();
     }
+
+    public void EnterZone()
+    {
+        gameManagement.EnterZone();
+    }
+
+    public void EndLeave()
+    {
+        gameManagement.EndLeave();
+    }
+
+    public void RefillOxygen()
+    {
+        gameManagement.RefillOxygen();
+    }
 }

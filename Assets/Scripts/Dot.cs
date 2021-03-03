@@ -423,6 +423,10 @@ public class Dot : MonoBehaviour
         {
             answerStr = "Seed: magic power connecting other objects";
         }
+        else if (this.tag == "TileElem")
+        {
+            answerStr = "Gear: collect for crafting";
+        }
         else
         {
             answerStr = "N/A";
@@ -467,9 +471,12 @@ public class Dot : MonoBehaviour
 
     private void SetColorAlphaVal(float alphaVal = 0.3f)
     {
-        Color tempColor = spriteRend.material.color;
-        tempColor.a = alphaVal;
-        spriteRend.material.color = tempColor;
+        if (spriteRend != null)
+        {
+            Color tempColor = spriteRend.material.color;
+            tempColor.a = alphaVal;
+            spriteRend.material.color = tempColor;
+        }
     }
 
     public void TransformElemType()

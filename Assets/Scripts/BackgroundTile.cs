@@ -13,6 +13,7 @@ public class BackgroundTile : MonoBehaviour
     public Sprite oxygen;
     public Sprite waste;
     public Sprite spriteTool;
+    public Sprite crystal;
 
     public Texture2D cursorTextureOver;
     public Texture2D cursorTextureDown;
@@ -32,6 +33,7 @@ public class BackgroundTile : MonoBehaviour
     private GameObject specialParticleVar = null;
 
     private bool isWorkstation = false;
+    private bool isCrystal = false;
 
     // Start is called before the first frame update
     void Start()
@@ -63,12 +65,13 @@ public class BackgroundTile : MonoBehaviour
         if (hitPoints <= 0 && board.ItemMap[column, row] == ItemType.None)
         {
             DestroyBackgroundTile();
+            board.DecreaseRowFunc();
         }
     }
 
     public void TakeDamage(int damage)
     {
-        if (!isWorkstation)
+        if (!isWorkstation && !isCrystal)
         {
             if (spriteRend.material.color == Color.black)
             {
@@ -110,6 +113,18 @@ public class BackgroundTile : MonoBehaviour
                         thisMain.startColor = new Color(1, 0, 1, .9f);
                     }
                 }
+                else if (board.ItemMap[column, row] == ItemType.Crystal)
+                {
+                    isCrystal = true;
+                    spriteRend.sprite = crystal;
+
+                    if (specialParticleVar == null)
+                    {
+                        specialParticleVar = Instantiate(specialParticle, this.gameObject.transform.position, Quaternion.identity);
+                        var thisMain = specialParticleVar.GetComponent<ParticleSystem>().main;
+                        thisMain.startColor = new Color(0, 0, 1, .9f);
+                    }
+                }
                 else
                 {
                     spriteRend.sprite = box;
@@ -134,7 +149,7 @@ public class BackgroundTile : MonoBehaviour
     {
         if (gameManagement != null && gameManagement.enableClickRock)
         {
-            Cursor.SetCursor(cursorTextureDown, Vector2.zero, CursorMode.Auto);
+            //Cursor.SetCursor(cursorTextureDown, Vector2.zero, CursorMode.Auto);
             // play sound
         }
     }
@@ -148,28 +163,36 @@ public class BackgroundTile : MonoBehaviour
                 gameManagement.OpenWindow();
             }
         }
+        else if (isCrystal)
+        {
+            if (gameManagement != null)
+            {
+                gameManagement.OpenHome();
+            }
+        }
         else
         {
             // debug only
             if (gameManagement != null && gameManagement.enableClickRock)
             {
-                gameManagement.IncreaseDay();
-                gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
+                //gameManagement.IncreaseDay();
+                //gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
 
-                if (soundManagement != null)
-                {
-                    soundManagement.PlayRandomDestroyNoise();
-                }
+                //if (soundManagement != null)
+                //{
+                //    soundManagement.PlayRandomDestroyNoise();
+                //}
+
+                //Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
 
                 TakeDamage(1);
-
-                Cursor.SetCursor(cursorTextureUp, Vector2.zero, CursorMode.Auto);
             }
 
             if (hitPoints <= 0 && board.ItemMap[column, row] != ItemType.None)
             {
                 PerformItem();
                 DestroyBackgroundTile();
+                board.DecreaseRowFunc();
             }
         }
     }
@@ -186,7 +209,7 @@ public class BackgroundTile : MonoBehaviour
                 //{
                 //    spriteRend.material.color = Color.white;
                 //}
-                Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto); // don't change cursor
+                //Cursor.SetCursor(cursorTextureOver, Vector2.zero, CursorMode.Auto); // don't change cursor
             }
         }
     }
@@ -216,7 +239,7 @@ public class BackgroundTile : MonoBehaviour
         }
     }
 
-    private void DestroyBackgroundTile()
+    public void DestroyBackgroundTile()
     {
         board.rockTiles[column, row] = null;
         board.rockTileCount--;
@@ -227,8 +250,6 @@ public class BackgroundTile : MonoBehaviour
             Destroy(specialParticleVar);
         }
         Destroy(this.gameObject);
-
-        board.DecreaseRowFunc();
     }
 
     private void PerformItem()
@@ -320,6 +341,18 @@ public class BackgroundTile : MonoBehaviour
         else if (spriteRend.sprite == spriteTool)
         {
             answerStr = "Workstation: click for crafting";
+        }
+        else if (spriteRend.sprite == oxygen)
+        {
+            answerStr = "Oxygen: oxygen value +" + gameManagement.itemOxygenVal;
+        }
+        else if (spriteRend.sprite == waste)
+        {
+            answerStr = "Pollutant: oxygen value -" + gameManagement.itemWasteVal;
+        }
+        else if (spriteRend.sprite == crystal)
+        {
+            answerStr = "Crystal: teleportation";
         }
         else
         {

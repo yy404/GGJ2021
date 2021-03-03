@@ -104,6 +104,7 @@ MonoBehaviour:
   oxygen: {fileID: 21300000, guid: 579b75941625a3745b18059d4175e205, type: 3}
   waste: {fileID: 21300000, guid: 9a3f45fd4c5830e4c98b7a9289f96961, type: 3}
   spriteTool: {fileID: 21300000, guid: 63fb13a44d6882b468da3376e5f19c1a, type: 3}
+  crystal: {fileID: 21300000, guid: 55ddb725767089a4d93237953853d433, type: 3}
   cursorTextureOver: {fileID: 2800000, guid: d3df85d12187df947b7426c46a46f152, type: 3}
   cursorTextureDown: {fileID: 2800000, guid: 3cb64319cf49821429e3ce876ae9f013, type: 3}
   cursorTextureUp: {fileID: 2800000, guid: 4b362c1f7e7c92f47981c79cdb831dc2, type: 3}

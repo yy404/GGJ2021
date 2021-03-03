@@ -20,8 +20,13 @@ public class GameManagement : MonoBehaviour
 
     public GameObject endGamePanel;
     public GameObject windowPanel;
+    public GameObject homePanel;
+
+    public GameObject shipPanel;
+    public GameObject buttonEndLeave;
 
     public bool enableClickRock = false;
+    public bool enableDecreaseRow = false;
 
     public string[] chipMsg;
     public string introMsg;
@@ -48,11 +53,11 @@ public class GameManagement : MonoBehaviour
     public float hardRockProbVal = 0.2f;
     public float shipProbVal = 0.2f;
 
-    private int buildShipVal = 5;
+    private int buildShipVal = 5; // 5
     private int buildExpVal = 0;
-    private int buildExpDelta = 5;
-    private int buildExpMax = 25;
-    private int buildShipGearNum = 5;
+    private int buildExpDelta = 5; // 5
+    private int buildExpMax = 25; // 25
+    private int buildShipGearNum = 30; // 5
 
     public Text feedbackText;
     public Text resourceText;
@@ -62,6 +67,8 @@ public class GameManagement : MonoBehaviour
     public int wasteItemNum;
     public int itemOxygenVal = 20;
     public int itemWasteVal = 10;
+
+    public int crystalItemNum = 1;
 
     public int oxygenConsumptionMulti = 1;
 
@@ -239,12 +246,12 @@ public class GameManagement : MonoBehaviour
                 feedbackText.text = "Successful";
 
                 CloseWindow();
+                OpenHome();
 
-                string temp = "I made a spaceship! I am ready for the new journey!";
-                temp += "\n";
-                DisplayLogText(temp); // need to be before SetGameEnd()
-                SetGameEnd();
-                soundManagement.PlayRandomWinSound();
+                shipPanel.SetActive(true);
+
+                buttonEndLeave.SetActive(true);
+                shipPanel.transform.GetChild(0).gameObject.GetComponent<Image>().color = Color.white;
             }
             else
             {
@@ -315,5 +322,41 @@ public class GameManagement : MonoBehaviour
             windowPanel.SetActive(false);
             board.currentState = GameState.move;
         }
+    }
+
+    public void EnterZone()
+    {
+        if (homePanel != null)
+        {
+            homePanel.SetActive(false);
+            board.currentState = GameState.move;
+            board.InitBoard();
+        }
+    }
+
+    public void OpenHome()
+    {
+        if (homePanel != null)
+        {
+            homePanel.SetActive(true);
+            board.currentState = GameState.pause;
+            board.DestroyAll();
+        }
+    }
+
+    public void EndLeave()
+    {
+        string temp = "I made a spaceship! I am ready for the new journey!";
+        temp += "\n";
+        DisplayLogText(temp); // need to be before SetGameEnd()
+
+        SetGameEnd();
+        soundManagement.PlayRandomWinSound();
+    }
+
+    public void RefillOxygen()
+    {
+        currOxygen = maxOxygen;
+        Debug.Log("Refilled oxygen");
     }
 }

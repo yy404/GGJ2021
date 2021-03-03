@@ -21,6 +21,7 @@ public enum ItemType
     Box,
     //Blueprint,
     Chip,
+    Crystal,
     Oxygen,
     Radar,
     //Seed,
@@ -85,6 +86,18 @@ public class Board : MonoBehaviour
         gameManagement = FindObjectOfType<GameManagement>();
         soundManagement = FindObjectOfType<SoundManagement>();
 
+        //InitBoard();
+    }
+
+    //// Update is called once per frame
+    //void Update()
+    //{
+
+    //}
+
+    // Initialisation of a new board
+    public void InitBoard()
+    {
         allDots = new GameObject[width, height];
         rockTiles = new BackgroundTile[width, height];
 
@@ -101,12 +114,6 @@ public class Board : MonoBehaviour
 
         SetUp();
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 
     // Initialise the board with tiles and dots
     private void SetUp()
@@ -255,38 +262,49 @@ public class Board : MonoBehaviour
 
     private IEnumerator DecreaseRowCo()
     {
-        for (int i = 0; i < width; i++)
+        if (gameManagement.enableDecreaseRow)
         {
-            for (int j = 0; j < height; j++)
+            for (int i = 0; i < width; i++)
             {
-                // If the current spot is empty
-                if (!rockTiles[i, j] && allDots[i, j] == null)
+                for (int j = 0; j < height; j++)
                 {
-                    // Loop from the space above to the top of column
-                    for (int k = j + 1; k < height; k++)
+                    // If the current spot is empty
+                    if (!rockTiles[i, j] && allDots[i, j] == null)
                     {
-                        // If a dot is found
-                        if (allDots[i, k] != null)
+                        // Loop from the space above to the top of column
+                        for (int k = j + 1; k < height; k++)
                         {
-                            // Move that dot to this empty space
-                            allDots[i, k].GetComponent<Dot>().row = j;
-                            // Set that spot to be null
-                            allDots[i, k] = null;
-                            // Break out of the loop;
-                            break;
+                            // If a dot is found
+                            if (allDots[i, k] != null)
+                            {
+                                // Move that dot to this empty space
+                                allDots[i, k].GetComponent<Dot>().row = j;
+                                // Set that spot to be null
+                                allDots[i, k] = null;
+                                // Break out of the loop;
+                                break;
+                            }
                         }
                     }
                 }
             }
+            yield return new WaitForSeconds(refillDelay * 0.5f);
         }
-        yield return new WaitForSeconds(refillDelay * 0.5f);
+
         StartCoroutine(FillBoardCo());
     }
 
     private IEnumerator FillBoardCo()
     {
-        yield return new WaitForSeconds(refillDelay);
-        RefillBoard();
+        //if (gameManagement.enableDecreaseRow)
+        {
+            yield return new WaitForSeconds(refillDelay);
+        }
+
+        if (currentState == GameState.wait)
+        {
+            RefillBoard();
+        }
 
         //while (MatchesOnBoard())
         //{
@@ -787,6 +805,11 @@ public class Board : MonoBehaviour
             AddItemToMap(ItemType.Workstation, "Workstation");
         }
 
+        for (int i = 0; i < gameManagement.crystalItemNum; i++)
+        {
+            AddItemToMap(ItemType.Crystal, "Crystal");
+        }
+
         // // adding chips
         // for (int i = 0; i < gameManagement.chipMsg.Length; i++)
         // {
@@ -814,14 +837,17 @@ public class Board : MonoBehaviour
             {
                 if (ItemMap[i, j] != ItemType.None)
                 {
-                    if (rockTiles[i, j] != null)
+                    if (ItemMap[i, j] != ItemType.Waste && ItemMap[i, j] != ItemType.Oxygen)
                     {
-                        rockTiles[i, j].DisplaySpecialRock();
-                    }
-                    else
-                    {
-                        //string debugMsg = string.Format("Null tile ({0},{1})", i, j);
-                        //Debug.Log(debugMsg);
+                        if (rockTiles[i, j] != null)
+                        {
+                            rockTiles[i, j].DisplaySpecialRock();
+                        }
+                        else
+                        {
+                            //string debugMsg = string.Format("Null tile ({0},{1})", i, j);
+                            //Debug.Log(debugMsg);
+                        }
                     }
                 }
             }
@@ -922,6 +948,7 @@ public class Board : MonoBehaviour
     public void DecreaseRowFunc()
     {
         // need this public function to be called by other object; won't work otherwise
+        currentState = GameState.wait;
         StartCoroutine(DecreaseRowCo());
     }
 
@@ -1008,7 +1035,7 @@ public class Board : MonoBehaviour
         {
             if (dotMarkCount > 1)
             {
-                if (thisDot.elemType == ElemType.Metal)
+                //if (thisDot.elemType == ElemType.Metal)
                 {
                     gameManagement.CollectGear(1);
                 }
@@ -1027,7 +1054,7 @@ public class Board : MonoBehaviour
             {
                 // thisDot.TransformElemType();
 
-                if (thisDot.elemType == ElemType.Metal)
+                //if (thisDot.elemType == ElemType.Metal)
                 {
                     gameManagement.CollectGear(1);
                 }
@@ -1045,5 +1072,24 @@ public class Board : MonoBehaviour
         }
 
         return isDestroyed;
+    }
+
+    public void DestroyAll()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (rockTiles[i, j] != null)
+                {
+                    rockTiles[i, j].DestroyBackgroundTile();
+                }
+
+                if (allDots[i, j] != null)
+                {
+                    Destroy(allDots[i, j]);
+                }
+            }
+        }
     }
 }
