@@ -106,11 +106,13 @@ public class Board : MonoBehaviour
 
         seqArray = new int[width * height];
 
-        rockTileCount = width * height - initFreeRowNum * initFreeColumnNum;
+        // rockTileCount = width * height - initFreeRowNum * initFreeColumnNum;
+        rockTileCount = width * height - 1;
 
         currDepth = initFreeRowNum;
 
-        exploredAreaCount = initFreeRowNum * initFreeColumnNum;
+        // exploredAreaCount = initFreeRowNum * initFreeColumnNum;
+        exploredAreaCount = 1;
 
         SetUp();
     }
@@ -660,19 +662,19 @@ public class Board : MonoBehaviour
         }
         else if (freeTileCount < 16)
         {
-            return 3;
+            return 2;
         }
         else if (freeTileCount < 36)
         {
-            return 4;
+            return 2;
         }
         else if (freeTileCount < 64)
         {
-            return 5;
+            return 3;
         }
         else
         {
-            return 5;
+            return 3;
         }
     }
 
@@ -800,10 +802,10 @@ public class Board : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < 1; i++)
-        {
-            AddItemToMap(ItemType.Workstation, "Workstation");
-        }
+        // for (int i = 0; i < 1; i++)
+        // {
+        //     AddItemToMap(ItemType.Workstation, "Workstation");
+        // }
 
         for (int i = 0; i < gameManagement.crystalItemNum; i++)
         {
@@ -964,6 +966,7 @@ public class Board : MonoBehaviour
             // Choose a random type of dots
             int currTileTypeNum = CalTileTypeNum();
             dotToUse = Random.Range(0, Mathf.Min(dots.Length, currTileTypeNum));
+            // Debug.Log(currTileTypeNum);
         }
 
         //int maxIterations = 0;

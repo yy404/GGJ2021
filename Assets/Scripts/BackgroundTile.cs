@@ -77,6 +77,11 @@ public class BackgroundTile : MonoBehaviour
             {
                 spriteRend.material.color = Color.white;
                 board.exploredAreaCount++;
+
+                if (board.ItemMap[column, row] == ItemType.None)
+                {
+                    hitPoints -= damage;
+                }
             }
             else
             {

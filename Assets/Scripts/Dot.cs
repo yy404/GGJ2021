@@ -38,10 +38,10 @@ public class Dot : MonoBehaviour
 
         if (this.tag == "TileElem")
         {
-            // int currTileTypeNum = board.CalTileTypeNum();
-            // elemType = (ElemType) Random.Range(0, Mathf.Min(5, currTileTypeNum));
+            int currTileTypeNum = board.CalTileTypeNum();
+            elemType = (ElemType) Random.Range(0, Mathf.Min(5, currTileTypeNum));
 
-            elemType = (ElemType) Random.Range(0,5);
+            // elemType = (ElemType) Random.Range(0,5);
 
             SetColorByElemType();
         }
@@ -425,7 +425,7 @@ public class Dot : MonoBehaviour
         }
         else if (this.tag == "TileElem")
         {
-            answerStr = "Gear: collect for crafting";
+            answerStr = "Action: explore the nearby area";
         }
         else
         {
@@ -509,6 +509,7 @@ public class Dot : MonoBehaviour
         ElemType tempType = elemType;
         while (tempType == elemType)
         {
+            
             tempType = (ElemType) Random.Range(0,5);
         }
         elemType = tempType;
