@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class BackgroundTile : MonoBehaviour
 {
@@ -35,6 +36,8 @@ public class BackgroundTile : MonoBehaviour
     private bool isWorkstation = false;
     private bool isCrystal = false;
 
+    private TextMeshPro textMeshComp;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +46,10 @@ public class BackgroundTile : MonoBehaviour
         board = FindObjectOfType<Board>();
 
         spriteRend = GetComponent<SpriteRenderer>();
+
+        GameObject thisTextObject = gameObject.transform.GetChild(0).gameObject;
+        textMeshComp = thisTextObject.GetComponent<TextMeshPro>();
+        textMeshComp.text = "";
 
         // default settings
         spriteRend.sprite = specialRock;
@@ -78,14 +85,23 @@ public class BackgroundTile : MonoBehaviour
                 spriteRend.material.color = Color.white;
                 board.exploredAreaCount++;
 
-                if (board.ItemMap[column, row] == ItemType.None)
-                {
-                    hitPoints -= damage;
-                }
+                hitPoints = Random.Range(1, 6);
+                textMeshComp.text = "" + hitPoints;
+
+                //if (board.ItemMap[column, row] == ItemType.None)
+                //{
+                //    hitPoints -= damage;
+                //}
             }
             else
             {
                 hitPoints -= damage;
+
+                textMeshComp.text = "";
+                if (hitPoints > 0)
+                {
+                    textMeshComp.text += hitPoints;
+                }
             }
 
             if ((hitPoints == 0) && (board.ItemMap[column, row] != ItemType.None))
