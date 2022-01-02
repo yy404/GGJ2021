@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Dot : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class Dot : MonoBehaviour
 
     public ElemType elemType = ElemType.Void;
 
+    private TextMeshPro textMeshComp;
+    private int damageVal = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +39,10 @@ public class Dot : MonoBehaviour
         findMatches = FindObjectOfType<FindMatches>();
         gameManagement = FindObjectOfType<GameManagement>();
         spriteRend = GetComponent<SpriteRenderer>();
+
+        GameObject thisTextObject = gameObject.transform.GetChild(0).gameObject;
+        textMeshComp = thisTextObject.GetComponent<TextMeshPro>();
+        textMeshComp.text = "";
 
         if (this.tag == "TileElem")
         {
@@ -99,7 +107,16 @@ public class Dot : MonoBehaviour
             if (board.currentState == GameState.move)
             {
                 marked = true;
-                MarkIt(this.tag, elemType);
+                if (damageVal > 1)
+                {
+                    SetColorAlphaVal(0.5f);
+                    board.MarkRock(column, row);
+                    board.dotMarkCount = 1;
+                }
+                else
+                {
+                    MarkIt(this.tag, elemType);
+                }
             }
         }
 
@@ -138,22 +155,36 @@ public class Dot : MonoBehaviour
         //}
 
         // bool isValid = board.dotMarkCount > 1 || elemType == ElemType.Void;
-        bool isValid = board.dotMarkCount > 0;
 
-        if (isValid)
+        if (board.dotMarkCount > 0)
         {
             // decrease oxygen firstly to make the logic correct
             if (board.dotMarkCount > 1)
             {
                 // normal consumption
                 gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
-                board.DestroyAllMarked();
+
+                damageVal = board.damageMarkCount;
+                textMeshComp.text = "" + damageVal;
+
+                marked = false;
+                board.DestroyAllMarked(0);
+                board.damageMarkCount = 0;
             }
             else
             {
                 // penalty consumption
-                gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption * gameManagement.oxygenConsumptionMulti);
-                board.DestroyAllMarked();
+                if (damageVal > 1)
+                {
+                    gameManagement.ConsumeOxygen(0);
+                }
+                else
+                {
+                    gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption * gameManagement.oxygenConsumptionMulti);
+                }
+
+                board.DestroyAllMarked(damageVal);
+                board.damageMarkCount = 0;
 
                 // TransformElemType();
                 // board.ClearDotMark();
@@ -179,7 +210,17 @@ public class Dot : MonoBehaviour
         if (board.currentState == GameState.move)
         {
             marked = true;
-            MarkIt(this.tag, elemType);
+            if (damageVal > 1)
+            {
+                SetColorAlphaVal(0.5f);
+                board.MarkRock(column, row);
+                board.dotMarkCount = 1;
+                board.damageMarkCount = damageVal;
+            }
+            else
+            {
+                MarkIt(this.tag, elemType);
+            }
 
             gameManagement.DisplayDialogueText(GeneDialogueText());
         }
@@ -190,6 +231,7 @@ public class Dot : MonoBehaviour
         board.ClearDotMark();
         board.ClearRockMark();
         board.seedMarkCount = 0;
+        board.damageMarkCount = 0;
         gameManagement.DisplayDeltaText("");
         gameManagement.DisplayDialogueText("");
     }
@@ -295,6 +337,7 @@ public class Dot : MonoBehaviour
         SetColorAlphaVal(0.5f);
 
         board.dotMarkCount++;
+        board.damageMarkCount += damageVal;
 
         if (elemType != ElemType.Void)
         {

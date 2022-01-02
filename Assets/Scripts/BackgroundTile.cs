@@ -78,7 +78,7 @@ public class BackgroundTile : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (!isWorkstation && !isCrystal)
+        if (damage > 0 && !isWorkstation && !isCrystal)
         {
             if (spriteRend.material.color == Color.black)
             {
@@ -86,7 +86,14 @@ public class BackgroundTile : MonoBehaviour
                 board.exploredAreaCount++;
 
                 hitPoints = Random.Range(1, 6);
-                textMeshComp.text = "" + hitPoints;
+
+                hitPoints -= damage;
+
+                textMeshComp.text = "";
+                if (hitPoints > 0)
+                {
+                    textMeshComp.text += hitPoints;
+                }
 
                 //if (board.ItemMap[column, row] == ItemType.None)
                 //{
@@ -104,7 +111,7 @@ public class BackgroundTile : MonoBehaviour
                 }
             }
 
-            if ((hitPoints == 0) && (board.ItemMap[column, row] != ItemType.None))
+            if ((hitPoints <= 0) && (board.ItemMap[column, row] != ItemType.None))
             {
                 if (board.ItemMap[column, row] == ItemType.Ship)
                 {

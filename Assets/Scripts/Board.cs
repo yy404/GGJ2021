@@ -76,6 +76,7 @@ public class Board : MonoBehaviour
 
     public int dotMarkCount = 0;
     public int seedMarkCount = 0;
+    public int damageMarkCount = 0;
 
     public int exploredAreaCount = 0;
 
@@ -662,19 +663,19 @@ public class Board : MonoBehaviour
         }
         else if (freeTileCount < 16)
         {
-            return 2;
+            return 3;
         }
         else if (freeTileCount < 36)
         {
-            return 2;
+            return 4;
         }
         else if (freeTileCount < 64)
         {
-            return 3;
+            return 5;
         }
         else
         {
-            return 3;
+            return 5;
         }
     }
 
@@ -888,7 +889,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void DestroyAllMarked()
+    public void DestroyAllMarked(int damageVal = 1)
     {
         bool anyMarked = false;
         bool anyDestroyed = false;
@@ -901,7 +902,7 @@ public class Board : MonoBehaviour
                 {
                     if (dotMarkCount > 0)
                     {
-                        rockTiles[i, j].TakeDamage(1);
+                        rockTiles[i, j].TakeDamage(damageVal);
                         anyMarked = true;
                     }
                 }
