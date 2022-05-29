@@ -85,12 +85,11 @@ public class BackgroundTile : MonoBehaviour
                 spriteRend.material.color = Color.white;
                 board.exploredAreaCount++;
 
-                hitPoints = Random.Range(1, 6);
-
-                hitPoints -= damage;
+                // hitPoints = Random.Range(1, 6);
+                // hitPoints -= damage;
 
                 textMeshComp.text = "";
-                if (hitPoints > 0)
+                if (hitPoints > 1)
                 {
                     textMeshComp.text += hitPoints;
                 }

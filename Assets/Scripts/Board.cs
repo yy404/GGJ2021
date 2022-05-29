@@ -33,12 +33,12 @@ public enum ItemType
 
 public enum ElemType
 {
-    Metal,
+    Metal,    
+    Void,
     Water,
     Wood,
     Fire,
     Soil,
-    Void,
     // Wind,
 }
 
@@ -80,6 +80,11 @@ public class Board : MonoBehaviour
 
     public int exploredAreaCount = 0;
 
+    public int toxicTileCount = 0;
+
+    public ElemType eventElemType = ElemType.Void;
+    public bool isAnEvent = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -107,13 +112,13 @@ public class Board : MonoBehaviour
 
         seqArray = new int[width * height];
 
-        // rockTileCount = width * height - initFreeRowNum * initFreeColumnNum;
-        rockTileCount = width * height - 1;
+        rockTileCount = width * height - initFreeRowNum * initFreeColumnNum;
+        // rockTileCount = width * height - 1;
 
         currDepth = initFreeRowNum;
 
-        // exploredAreaCount = initFreeRowNum * initFreeColumnNum;
-        exploredAreaCount = 1;
+        exploredAreaCount = initFreeRowNum * initFreeColumnNum;
+        // exploredAreaCount = 1;
 
         SetUp();
     }
@@ -511,15 +516,15 @@ public class Board : MonoBehaviour
 
     private void GenerateRockTiles()
     {
-        int targetI = Random.Range(0,width);
-        int targetJ = Random.Range(0,height);
+        // int targetI = Random.Range(0,width);
+        // int targetJ = Random.Range(0,height);
 
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                // bool isTargetRange = (i > initFreeColumnNum - 1) || (j < height - initFreeRowNum); // leave x line(s) above
-                bool isTargetRange = !((i == targetI) && (j == targetJ));
+                bool isTargetRange = (i > initFreeColumnNum - 1) || (j < height - initFreeRowNum); // leave x line(s) above
+                // bool isTargetRange = !((i == targetI) && (j == targetJ));
 
                 if (isTargetRange)
                 {
@@ -1030,18 +1035,61 @@ public class Board : MonoBehaviour
         bool isDestroyed = false;
 
         Dot thisDot = allDots[i, j].GetComponent<Dot>();
-        if (thisDot.elemType == ElemType.Void)
+        if (thisDot.elemType == ElemType.Metal)
         {
-            thisDot.elemType = (ElemType) Random.Range(0,5);
+            thisDot.elemType = (ElemType) Random.Range(1,5);
+            thisDot.SetColorByElemType();
+
+            if (thisDot.elemType == ElemType.Fire)
+            {
+                toxicTileCount++;
+            }
+
+            gameManagement.currExploreCount++;
+        }
+        else if (thisDot.elemType != ElemType.Void)
+        {
+            if (thisDot.elemType == ElemType.Wood)
+            {
+                gameManagement.CollectGear(1);
+            }
+            else if (thisDot.elemType == ElemType.Water)
+            {
+                gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenVal * -1); // add
+            }
+            else if (thisDot.elemType == ElemType.Fire)
+            {
+                toxicTileCount--;
+            }
+
+            thisDot.elemType = ElemType.Void;
             thisDot.SetColorByElemType();
         }
-        else
+        else if (thisDot.elemType == ElemType.Void && isAnEvent)
         {
-            if (dotMarkCount > 1)
+            thisDot.elemType = eventElemType;
+            thisDot.SetColorByElemType();
+
+            if (thisDot.elemType == ElemType.Fire)
             {
-                //if (thisDot.elemType == ElemType.Metal)
+                toxicTileCount++;
+            }
+        }
+        else // i.e. ElemType.Void without an event
+        {
+            if (dotMarkCount > 0)
+            {
+                if (thisDot.elemType == ElemType.Wood)
                 {
                     gameManagement.CollectGear(1);
+                }
+                else if (thisDot.elemType == ElemType.Water)
+                {
+                    gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenVal * -1); // add
+                }
+                else if (thisDot.elemType == ElemType.Fire)
+                {
+                    toxicTileCount--;
                 }
 
                 // particle
@@ -1054,25 +1102,25 @@ public class Board : MonoBehaviour
                 allDots[i, j] = null;
                 isDestroyed = true;
             }
-            else
-            {
-                // thisDot.TransformElemType();
+            // else
+            // {
+            //     // thisDot.TransformElemType();
 
-                //if (thisDot.elemType == ElemType.Metal)
-                {
-                    gameManagement.CollectGear(1);
-                }
+            //     //if (thisDot.elemType == ElemType.Metal)
+            //     {
+            //         gameManagement.CollectGear(1);
+            //     }
 
-                // particle
-                GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
-                var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
-                textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
+            //     // particle
+            //     GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
+            //     var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
+            //     textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
 
-                //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
-                Destroy(allDots[i, j]);
-                allDots[i, j] = null;
-                isDestroyed = true;
-            }
+            //     //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
+            //     Destroy(allDots[i, j]);
+            //     allDots[i, j] = null;
+            //     isDestroyed = true;
+            // }
         }
 
         return isDestroyed;

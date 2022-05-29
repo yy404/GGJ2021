@@ -1157,8 +1157,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86bcac31ae90cac41b8c67f03a8e5f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 12
-  height: 12
+  width: 6
+  height: 6
   offset: 20
   tilePrefab: {fileID: 5197373523682421405, guid: 75a7f371be60a9445b3031218b3cd1ed,
     type: 3}
@@ -1169,8 +1169,8 @@ MonoBehaviour:
   spriteParticle: {fileID: 23462556589404678, guid: 5cd32c1f670123247889834726e7fb16,
     type: 3}
   rockTileCount: 48
-  initFreeRowNum: 3
-  initFreeColumnNum: 3
+  initFreeRowNum: 12
+  initFreeColumnNum: 12
   currDepth: 0
   refillDelay: 0.5
   currentState: 1
@@ -1180,6 +1180,9 @@ MonoBehaviour:
   seedMarkCount: 0
   damageMarkCount: 0
   exploredAreaCount: 0
+  toxicTileCount: 0
+  eventElemType: 1
+  isAnEvent: 0
 --- !u!1 &385698161
 GameObject:
   m_ObjectHideFlags: 0
@@ -3986,9 +3989,9 @@ MonoBehaviour:
   logText: {fileID: 1897933084}
   statsText: {fileID: 1161305852}
   deltaText: {fileID: 1279507213}
-  maxOxygen: 100
-  oxygenDailyConsumption: 5
-  singleTileOxygenVal: 3
+  maxOxygen: 1000
+  oxygenDailyConsumption: 0
+  singleTileOxygenVal: 1
   singleTileWasteVal: 2
   singleTileOxygenValPlus: 0
   endGamePanel: {fileID: 287355019}
@@ -3997,7 +4000,7 @@ MonoBehaviour:
   shipPanel: {fileID: 1257734332}
   buttonEndLeave: {fileID: 1377589943}
   enableClickRock: 0
-  enableDecreaseRow: 0
+  enableDecreaseRow: 1
   chipMsg:
   - 'A new message from Lily: In order to stay alive on this planet, the oxygen is
     essential everyday. Unfortunately, I consumed all my oxygen and lay at rest here.
@@ -4034,6 +4037,12 @@ MonoBehaviour:
   itemWasteVal: 20
   crystalItemNum: 0
   oxygenConsumptionMulti: 1
+  toxicValMulti: 1
+  eventThreshold: 4
+  nextEventCount: 0
+  currExploreCount: 0
+  eventMoveCount: 0
+  currMoveCount: 0
 --- !u!1 &1359082988
 GameObject:
   m_ObjectHideFlags: 0

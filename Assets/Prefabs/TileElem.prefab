@@ -279,6 +279,10 @@ MonoBehaviour:
   marked: 0
   spriteRend: {fileID: 0}
   elemType: 0
+  gear: {fileID: 21300000, guid: 9d0a231645579d44caa85b9362060504, type: 3}
+  oxygen: {fileID: 21300000, guid: 579b75941625a3745b18059d4175e205, type: 3}
+  waste: {fileID: 21300000, guid: 9a3f45fd4c5830e4c98b7a9289f96961, type: 3}
+  battery: {fileID: 21300000, guid: 09de771ff07a7de42ad0e1b148ca8582, type: 3}
 --- !u!58 &7288259051817382416
 CircleCollider2D:
   m_ObjectHideFlags: 0

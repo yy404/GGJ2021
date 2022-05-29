@@ -71,6 +71,15 @@ public class GameManagement : MonoBehaviour
     public int crystalItemNum = 1;
 
     public int oxygenConsumptionMulti = 1;
+    public int toxicValMulti = 1;
+
+    public int eventThreshold = 4;
+
+    public int nextEventCount = 0;
+    public int currExploreCount = 0;
+    public int eventMoveCount = 0;
+    public int currMoveCount = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -81,6 +90,7 @@ public class GameManagement : MonoBehaviour
         // Initialise stats
         currOxygen = maxOxygen;
         currDay = 0;
+        nextEventCount = Random.Range(30,50);
 
         logText.text = "";
         DisplayLogText(introMsg + "\n");
@@ -126,6 +136,28 @@ public class GameManagement : MonoBehaviour
 
     public void IncreaseDay()
     {
+        if (nextEventCount > 0 && currExploreCount >= nextEventCount) // to start an event
+        {
+            currExploreCount = 0;
+            nextEventCount = -1;
+
+            currMoveCount = 0;
+            toxicValMulti = Random.Range(1,10);
+            eventMoveCount = Random.Range(5,10);
+            currMoveCount = eventMoveCount;
+        }
+
+        if (nextEventCount == -1) // during event
+        {
+            currMoveCount--;
+            if (currMoveCount < 1) // end event
+            {
+                toxicValMulti = 1;
+                nextEventCount = Random.Range(30,50);
+                eventMoveCount = -1;
+            }
+        }
+
         UpdateDiary();
         currDay++;
     }
@@ -141,9 +173,23 @@ public class GameManagement : MonoBehaviour
             thisDiary += "\n";
         }
 
-        thisDiary += goalMsgArea + ": " + board.exploredAreaCount;
-        //thisDiary += "/" + (board.width * board.height);
-        thisDiary += "\n";
+        // thisDiary += goalMsgArea + ": " + board.exploredAreaCount;
+        // //thisDiary += "/" + (board.width * board.height);
+        // thisDiary += "\n";
+
+        if (nextEventCount > 0)
+        {
+            thisDiary += "Explore until next event" + ": " + currExploreCount + "/" + nextEventCount;
+            thisDiary += "\n";
+        }
+
+        if (eventMoveCount > 0)
+        {
+            thisDiary += "Event toxic level multiple: " + toxicValMulti;
+            thisDiary += "\n";
+            thisDiary += "Move count until event end" + ": " + currMoveCount + "/" + eventMoveCount;
+            thisDiary += "\n";
+        }
 
         if (thisDiary == "")
         {

@@ -32,6 +32,11 @@ public class Dot : MonoBehaviour
     private TextMeshPro textMeshComp;
     private int damageVal = 1;
 
+    public Sprite gear;
+    public Sprite oxygen;
+    public Sprite waste;
+    public Sprite battery;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,10 +51,10 @@ public class Dot : MonoBehaviour
 
         if (this.tag == "TileElem")
         {
-            int currTileTypeNum = board.CalTileTypeNum();
-            elemType = (ElemType) Random.Range(0, Mathf.Min(5, currTileTypeNum));
+            // int currTileTypeNum = board.CalTileTypeNum();
+            // elemType = (ElemType) Random.Range(0, Mathf.Min(5, currTileTypeNum));
 
-            // elemType = (ElemType) Random.Range(0,5);
+            elemType = (ElemType) Random.Range(0,2);
 
             SetColorByElemType();
         }
@@ -156,29 +161,53 @@ public class Dot : MonoBehaviour
 
         // bool isValid = board.dotMarkCount > 1 || elemType == ElemType.Void;
 
-        if (board.dotMarkCount > 0)
+        if (board.dotMarkCount > 1)
         {
+            bool isEventReset = false;
+
+            if (this.tag == "TileElem" && elemType != ElemType.Metal && elemType != ElemType.Void && board.dotMarkCount == gameManagement.eventThreshold)
+            {
+                // board.isAnEvent = true;
+
+                // board.eventElemType = (ElemType) Random.Range(2,5);
+                board.eventElemType = elemType;
+            }
+            else if (this.tag == "TileElem" && elemType == ElemType.Void && board.isAnEvent)
+            {
+                isEventReset = true;
+            }
+
+            if (this.tag == "TileElem" && elemType == ElemType.Fire)
+            {
+                gameManagement.ConsumeOxygen((board.toxicTileCount - board.dotMarkCount) * gameManagement.toxicValMulti);
+            }
+            else
+            {
+                gameManagement.ConsumeOxygen(board.toxicTileCount * gameManagement.toxicValMulti);
+            }
+
             // decrease oxygen firstly to make the logic correct
             if (board.dotMarkCount > 1)
             {
                 // normal consumption
                 gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
 
-                damageVal = board.damageMarkCount;
-                textMeshComp.text = "" + damageVal;
+                // damageVal = board.damageMarkCount;
+                // textMeshComp.text = "" + damageVal;
 
-                marked = false;
-                board.DestroyAllMarked(0);
+                // marked = false;
+                // board.DestroyAllMarked(0);
+                board.DestroyAllMarked(damageVal);
                 board.damageMarkCount = 0;
             }
             else
             {
                 // penalty consumption
-                if (damageVal > 1)
-                {
-                    gameManagement.ConsumeOxygen(0);
-                }
-                else
+                // if (damageVal > 1)
+                // {
+                //     gameManagement.ConsumeOxygen(0);
+                // }
+                // else
                 {
                     gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption * gameManagement.oxygenConsumptionMulti);
                 }
@@ -192,6 +221,12 @@ public class Dot : MonoBehaviour
                 // board.seedMarkCount = 0;
                 // gameManagement.DisplayDeltaText("");
                 // gameManagement.DisplayDialogueText("");
+            }
+
+            if (isEventReset)
+            {
+                board.isAnEvent = false;
+                board.eventElemType = ElemType.Void;
             }
 
             gameManagement.IncreaseDay(); // need to be after DestroyAllMarked() to avoid incorrect display
@@ -339,7 +374,7 @@ public class Dot : MonoBehaviour
         board.dotMarkCount++;
         board.damageMarkCount += damageVal;
 
-        if (elemType != ElemType.Void)
+        // if (elemType != ElemType.Void)
         {
             board.MarkRock(column, row);
         }
@@ -370,10 +405,14 @@ public class Dot : MonoBehaviour
         }
 
         // to be optimised
-        // if (board.dotMarkCount > 1)
-        // {
-        //     UpdateDeltaText(thisTag);
-        // }
+        if (board.dotMarkCount > 1)
+        {
+            UpdateDeltaText(thisTag, thisElemType);
+        }
+        else
+        {
+            gameManagement.DisplayDeltaText("X");
+        }
     }
 
     private void MarkTheOtherDot(GameObject theOtherDot, string thisTag, ElemType thisElemType)
@@ -385,11 +424,13 @@ public class Dot : MonoBehaviour
             {
                 if (thisTag == "TileElem")
                 {
-                    if (thisElemType == ElemType.Void)
-                    {
-                        // pass
-                    }
-                    else if (thisElemType == theOtherDotComp.elemType)
+                    // if (thisElemType == ElemType.Void)
+                    // {
+                    //     // pass
+                    // }
+                    // else 
+                    
+                    if (thisElemType == theOtherDotComp.elemType)
                     {
                         theOtherDotComp.marked = true;
                         theOtherDotComp.MarkIt(thisTag, thisElemType);
@@ -410,9 +451,9 @@ public class Dot : MonoBehaviour
         }
     }
 
-    private void UpdateDeltaText(string thisTag)
+    private void UpdateDeltaText(string thisTag, ElemType thisElemType)
     {
-        int tempOxygenVal = -1 * gameManagement.oxygenDailyConsumption;
+        int tempOxygenVal = -1 * (gameManagement.oxygenDailyConsumption + board.toxicTileCount * gameManagement.toxicValMulti);
         if (thisTag == "TileOxygen")
         {
             tempOxygenVal += (board.dotMarkCount - board.seedMarkCount) * gameManagement.singleTileOxygenVal;
@@ -435,14 +476,39 @@ public class Dot : MonoBehaviour
         {
             tempOxygenVal += board.dotMarkCount * gameManagement.singleTileOxygenValPlus;
         }
+        else if (thisTag == "TileElem")
+        {
+            if (thisElemType == ElemType.Water)
+            {
+                tempOxygenVal += board.dotMarkCount * gameManagement.singleTileOxygenVal;
+            }
+            else if (thisElemType == ElemType.Fire)
+            {
+                tempOxygenVal += board.dotMarkCount * gameManagement.toxicValMulti;
+            }
+        }
+
+        string eventSign = "";
+        if (thisTag == "TileElem" && elemType != ElemType.Metal && elemType != ElemType.Void && board.dotMarkCount == gameManagement.eventThreshold)
+        {
+            eventSign += " +EVENT";
+        }
+        else if (thisTag == "TileElem" && thisElemType == ElemType.Void && board.isAnEvent)
+        {
+            eventSign += " " + board.eventElemType;
+        }
 
         if (tempOxygenVal > 0)
         {
-            gameManagement.DisplayDeltaText("+" + tempOxygenVal);
+            gameManagement.DisplayDeltaText("+" + tempOxygenVal + eventSign);
+        }
+        else if (tempOxygenVal == 0)
+        {
+            gameManagement.DisplayDeltaText("-" + tempOxygenVal + eventSign);
         }
         else
         {
-            gameManagement.DisplayDeltaText("" + tempOxygenVal);
+            gameManagement.DisplayDeltaText("" + tempOxygenVal + eventSign);
         }
     }
 
@@ -481,6 +547,7 @@ public class Dot : MonoBehaviour
     public void SetColorByElemType()
     {
         Color color = Color.white;
+        Sprite spriteTemp = gear;
 
         if (elemType == ElemType.Metal)
         {
@@ -489,14 +556,17 @@ public class Dot : MonoBehaviour
         else if (elemType == ElemType.Water)
         {
             color = Color.blue;
+            spriteTemp = oxygen;
         }
         else if (elemType == ElemType.Wood)
         {
             color = Color.green;
+            spriteTemp = battery;
         }
         else if (elemType == ElemType.Fire)
         {
             color = Color.red;
+            spriteTemp = waste;
         }
         else if (elemType == ElemType.Soil)
         {
@@ -507,6 +577,7 @@ public class Dot : MonoBehaviour
             // pass
         }
 
+        spriteRend.sprite = spriteTemp;
         spriteRend.material.color = color;
 
         // SetColorAlphaVal();
