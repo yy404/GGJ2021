@@ -85,6 +85,8 @@ public class Board : MonoBehaviour
     public ElemType eventElemType = ElemType.Void;
     public bool isAnEvent = false;
 
+    public List<ElemType> scannerList;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -119,6 +121,14 @@ public class Board : MonoBehaviour
 
         exploredAreaCount = initFreeRowNum * initFreeColumnNum;
         // exploredAreaCount = 1;
+
+
+        scannerList = new List<ElemType>();
+        scannerList.Add(ElemType.Void);
+        scannerList.Add(ElemType.Void);
+        scannerList.Add(ElemType.Void);
+        scannerList.Add(ElemType.Void);
+        scannerList.Add(ElemType.Void);
 
         SetUp();
     }
@@ -1037,7 +1047,8 @@ public class Board : MonoBehaviour
         Dot thisDot = allDots[i, j].GetComponent<Dot>();
         if (thisDot.elemType == ElemType.Metal)
         {
-            thisDot.elemType = (ElemType) Random.Range(1,5);
+            int scannerIndex = Random.Range(0, scannerList.Count);
+            thisDot.elemType = scannerList[scannerIndex];
             thisDot.SetColorByElemType();
 
             if (thisDot.elemType == ElemType.Fire)

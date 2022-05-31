@@ -77,9 +77,12 @@ public class GameManagement : MonoBehaviour
 
     public int nextEventCount = 0;
     public int currExploreCount = 0;
+    public int currExploreMoveCount = 0;
     public int eventMoveCount = 0;
     public int currMoveCount = 0;
 
+    private int sectorSize = 50;
+    public int sectorLevel = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -90,7 +93,7 @@ public class GameManagement : MonoBehaviour
         // Initialise stats
         currOxygen = maxOxygen;
         currDay = 0;
-        nextEventCount = Random.Range(30,50);
+        nextEventCount = sectorSize;
 
         logText.text = "";
         DisplayLogText(introMsg + "\n");
@@ -136,6 +139,8 @@ public class GameManagement : MonoBehaviour
 
     public void IncreaseDay()
     {
+        ElemType elemToAdd = ElemType.Void;
+
         if (nextEventCount > 0 && currExploreCount >= nextEventCount) // to start an event
         {
             currExploreCount = 0;
@@ -143,8 +148,11 @@ public class GameManagement : MonoBehaviour
 
             currMoveCount = 0;
             toxicValMulti = Random.Range(1,10);
-            eventMoveCount = Random.Range(5,10);
+            eventMoveCount = 1;
             currMoveCount = eventMoveCount;
+
+            elemToAdd = (ElemType)Random.Range(2, 5);
+            currExploreMoveCount = 0;
         }
 
         if (nextEventCount == -1) // during event
@@ -153,13 +161,18 @@ public class GameManagement : MonoBehaviour
             if (currMoveCount < 1) // end event
             {
                 toxicValMulti = 1;
-                nextEventCount = Random.Range(30,50);
+                nextEventCount = sectorSize;
                 eventMoveCount = -1;
+                sectorLevel++;
             }
         }
 
+        board.scannerList.Add(elemToAdd);
+        board.scannerList.RemoveAt(0);
+
         UpdateDiary();
         currDay++;
+        currExploreMoveCount++;
     }
 
     private void UpdateDiary()
@@ -177,9 +190,18 @@ public class GameManagement : MonoBehaviour
         // //thisDiary += "/" + (board.width * board.height);
         // thisDiary += "\n";
 
+        if (board.scannerList.Count > 0)
+        {
+            foreach (ElemType s in board.scannerList)
+            {
+                thisDiary += s;
+            }
+            thisDiary += "\n";
+        }
+
         if (nextEventCount > 0)
         {
-            thisDiary += "Explore until next event" + ": " + currExploreCount + "/" + nextEventCount;
+            thisDiary += "Explore until next sector" + ": " + currExploreCount + "/" + nextEventCount;
             thisDiary += "\n";
         }
 
