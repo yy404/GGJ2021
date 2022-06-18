@@ -1183,6 +1183,7 @@ MonoBehaviour:
   toxicTileCount: 0
   eventElemType: 1
   isAnEvent: 0
+  scannerList: 
 --- !u!1 &385698161
 GameObject:
   m_ObjectHideFlags: 0
@@ -3989,7 +3990,7 @@ MonoBehaviour:
   logText: {fileID: 1897933084}
   statsText: {fileID: 1161305852}
   deltaText: {fileID: 1279507213}
-  maxOxygen: 1000
+  maxOxygen: 30
   oxygenDailyConsumption: 0
   singleTileOxygenVal: 1
   singleTileWasteVal: 2
@@ -4041,8 +4042,15 @@ MonoBehaviour:
   eventThreshold: 4
   nextEventCount: 0
   currExploreCount: 0
+  currExploreMoveCount: 0
   eventMoveCount: 0
   currMoveCount: 0
+  sectorSize: 100
+  sectorLevel: 1
+  gasFilterVal: 20
+  gasFilterInc: 5
+  gasCollectedVal: 0
+  filterResultVal: 10
 --- !u!1 &1359082988
 GameObject:
   m_ObjectHideFlags: 0

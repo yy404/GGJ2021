@@ -125,10 +125,7 @@ public class Board : MonoBehaviour
 
         scannerList = new List<ElemType>();
         scannerList.Add(ElemType.Void);
-        scannerList.Add(ElemType.Void);
-        scannerList.Add(ElemType.Void);
-        scannerList.Add(ElemType.Void);
-        scannerList.Add(ElemType.Void);
+        scannerList.Add(ElemType.Fire);
 
         SetUp();
     }

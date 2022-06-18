@@ -81,8 +81,13 @@ public class GameManagement : MonoBehaviour
     public int eventMoveCount = 0;
     public int currMoveCount = 0;
 
-    private int sectorSize = 50;
+    public int sectorSize = 100;
     public int sectorLevel = 1;
+
+    public int gasFilterVal = 20;
+    public int gasFilterInc = 10;
+    public int gasCollectedVal = 0;
+    public int filterResultVal = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -163,12 +168,14 @@ public class GameManagement : MonoBehaviour
                 toxicValMulti = 1;
                 nextEventCount = sectorSize;
                 eventMoveCount = -1;
+
                 sectorLevel++;
+                gasFilterVal += gasFilterInc;
             }
         }
 
-        board.scannerList.Add(elemToAdd);
-        board.scannerList.RemoveAt(0);
+        //board.scannerList.Add(elemToAdd);
+        //board.scannerList.RemoveAt(0);
 
         UpdateDiary();
         currDay++;
@@ -190,12 +197,21 @@ public class GameManagement : MonoBehaviour
         // //thisDiary += "/" + (board.width * board.height);
         // thisDiary += "\n";
 
+        thisDiary += "Sector Level " + sectorLevel;
+        thisDiary += "\n";
+
         if (board.scannerList.Count > 0)
         {
             foreach (ElemType s in board.scannerList)
             {
                 thisDiary += s;
             }
+            thisDiary += "\n";
+        }
+
+        if (nextEventCount > 0)
+        {
+            thisDiary += "Gas until next filtered oxygen" + ": " + gasCollectedVal + "/" + gasFilterVal;
             thisDiary += "\n";
         }
 

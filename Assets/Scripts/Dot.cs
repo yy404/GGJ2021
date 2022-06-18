@@ -177,13 +177,25 @@ public class Dot : MonoBehaviour
                 isEventReset = true;
             }
 
+            //if (this.tag == "TileElem" && elemType == ElemType.Fire)
+            //{
+            //    gameManagement.ConsumeOxygen((board.toxicTileCount - board.dotMarkCount) * gameManagement.toxicValMulti);
+            //}
+            //else
+            //{
+            //    gameManagement.ConsumeOxygen(board.toxicTileCount * gameManagement.toxicValMulti);
+            //}
+
+            gameManagement.ConsumeOxygen(1);
             if (this.tag == "TileElem" && elemType == ElemType.Fire)
             {
-                gameManagement.ConsumeOxygen((board.toxicTileCount - board.dotMarkCount) * gameManagement.toxicValMulti);
-            }
-            else
-            {
-                gameManagement.ConsumeOxygen(board.toxicTileCount * gameManagement.toxicValMulti);
+                gameManagement.gasCollectedVal += board.dotMarkCount;
+
+                while (gameManagement.gasCollectedVal >= gameManagement.gasFilterVal)
+                {
+                    gameManagement.ConsumeOxygen(-1 * gameManagement.filterResultVal);
+                    gameManagement.gasCollectedVal -= gameManagement.gasFilterVal;
+                }
             }
 
             // decrease oxygen firstly to make the logic correct
