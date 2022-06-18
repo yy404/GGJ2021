@@ -89,6 +89,8 @@ public class GameManagement : MonoBehaviour
     public int gasCollectedVal = 0;
     public int filterResultVal = 10;
 
+    public int uncertaintyCap = 3;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -134,7 +136,7 @@ public class GameManagement : MonoBehaviour
             oxygenText.text = "O2: " + currOxygen;
 
 
-            string temp = "I have consumed all my oxygen… If I could have the change to do it again, I would collect oxygen first.";
+            string temp = "Done! Good Job!";
             temp += "\n";
             DisplayLogText(temp); // need to be before SetGameEnd()
             SetGameEnd();
@@ -144,7 +146,7 @@ public class GameManagement : MonoBehaviour
 
     public void IncreaseDay()
     {
-        ElemType elemToAdd = ElemType.Void;
+        ElemType elemToAdd = ElemType.Water;
 
         if (nextEventCount > 0 && currExploreCount >= nextEventCount) // to start an event
         {
@@ -156,7 +158,7 @@ public class GameManagement : MonoBehaviour
             eventMoveCount = 1;
             currMoveCount = eventMoveCount;
 
-            elemToAdd = (ElemType)Random.Range(2, 5);
+            elemToAdd = ElemType.Water;
             currExploreMoveCount = 0;
         }
 
@@ -174,8 +176,8 @@ public class GameManagement : MonoBehaviour
             }
         }
 
-        //board.scannerList.Add(elemToAdd);
-        //board.scannerList.RemoveAt(0);
+        board.scannerList.Add(elemToAdd);
+        board.scannerList.RemoveAt(0);
 
         UpdateDiary();
         currDay++;
@@ -200,20 +202,20 @@ public class GameManagement : MonoBehaviour
         thisDiary += "Sector Level " + sectorLevel;
         thisDiary += "\n";
 
-        if (board.scannerList.Count > 0)
-        {
-            foreach (ElemType s in board.scannerList)
-            {
-                thisDiary += s;
-            }
-            thisDiary += "\n";
-        }
+        //if (board.scannerList.Count > 0)
+        //{
+        //    foreach (ElemType s in board.scannerList)
+        //    {
+        //        thisDiary += s;
+        //    }
+        //    thisDiary += "\n";
+        //}
 
-        if (nextEventCount > 0)
-        {
-            thisDiary += "Gas until next filtered oxygen" + ": " + gasCollectedVal + "/" + gasFilterVal;
-            thisDiary += "\n";
-        }
+        //if (nextEventCount > 0)
+        //{
+        //    thisDiary += "Gas until next filtered oxygen" + ": " + gasCollectedVal + "/" + gasFilterVal;
+        //    thisDiary += "\n";
+        //}
 
         if (nextEventCount > 0)
         {

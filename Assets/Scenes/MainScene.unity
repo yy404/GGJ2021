@@ -1179,11 +1179,13 @@ MonoBehaviour:
   dotMarkCount: 0
   seedMarkCount: 0
   damageMarkCount: 0
+  isShipClick: 0
   exploredAreaCount: 0
   toxicTileCount: 0
   eventElemType: 1
   isAnEvent: 0
   scannerList: 
+  shipPosition: {x: 0, y: 0}
 --- !u!1 &385698161
 GameObject:
   m_ObjectHideFlags: 0
@@ -1807,7 +1809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5e2acbdd712ef4f8c2050fb30d95e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraOffsetX: -4.6
+  cameraOffsetX: -2.6
   cameraOffsetY: 0
   cameraOffsetZ: -10
   padding: 0.9
@@ -3990,8 +3992,8 @@ MonoBehaviour:
   logText: {fileID: 1897933084}
   statsText: {fileID: 1161305852}
   deltaText: {fileID: 1279507213}
-  maxOxygen: 30
-  oxygenDailyConsumption: 0
+  maxOxygen: 20
+  oxygenDailyConsumption: 1
   singleTileOxygenVal: 1
   singleTileWasteVal: 2
   singleTileOxygenValPlus: 0
@@ -4001,7 +4003,7 @@ MonoBehaviour:
   shipPanel: {fileID: 1257734332}
   buttonEndLeave: {fileID: 1377589943}
   enableClickRock: 0
-  enableDecreaseRow: 1
+  enableDecreaseRow: 0
   chipMsg:
   - 'A new message from Lily: In order to stay alive on this planet, the oxygen is
     essential everyday. Unfortunately, I consumed all my oxygen and lay at rest here.
@@ -4045,12 +4047,13 @@ MonoBehaviour:
   currExploreMoveCount: 0
   eventMoveCount: 0
   currMoveCount: 0
-  sectorSize: 100
+  sectorSize: 20
   sectorLevel: 1
   gasFilterVal: 20
   gasFilterInc: 5
   gasCollectedVal: 0
   filterResultVal: 10
+  uncertaintyCap: 3
 --- !u!1 &1359082988
 GameObject:
   m_ObjectHideFlags: 0

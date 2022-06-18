@@ -36,6 +36,8 @@ public class Dot : MonoBehaviour
     public Sprite oxygen;
     public Sprite waste;
     public Sprite battery;
+    public Sprite ship;
+    public Sprite rock;
 
     // Start is called before the first frame update
     void Start()
@@ -54,7 +56,14 @@ public class Dot : MonoBehaviour
             // int currTileTypeNum = board.CalTileTypeNum();
             // elemType = (ElemType) Random.Range(0, Mathf.Min(5, currTileTypeNum));
 
-            elemType = (ElemType) Random.Range(0,2);
+            if ( IsShipTile() )
+            {
+                elemType = ElemType.Void;
+            }
+            else
+            {
+                elemType = (ElemType)Random.Range(0, 2);
+            }
 
             SetColorByElemType();
         }
@@ -159,11 +168,15 @@ public class Dot : MonoBehaviour
         //    gameManagement.ConsumeOxygen(gameManagement.oxygenDailyConsumption);
         //}
 
-        // bool isValid = board.dotMarkCount > 1 || elemType == ElemType.Void;
+        bool isValid = !IsShipTile() && board.dotMarkCount > 1 && ( elemType == ElemType.Void || elemType == ElemType.Metal );
 
-        if (board.dotMarkCount > 1)
+        if ( isValid || IsShipNeighbour() )
         {
             bool isEventReset = false;
+            //int dotCount = board.damageMarkCount;
+            bool shouldGenerate = board.damageMarkCount > gameManagement.uncertaintyCap && this.tag == "TileElem" && elemType == ElemType.Metal;
+
+            ElemType previousElemType = elemType;
 
             if (this.tag == "TileElem" && elemType != ElemType.Metal && elemType != ElemType.Void && board.dotMarkCount == gameManagement.eventThreshold)
             {
@@ -186,7 +199,6 @@ public class Dot : MonoBehaviour
             //    gameManagement.ConsumeOxygen(board.toxicTileCount * gameManagement.toxicValMulti);
             //}
 
-            gameManagement.ConsumeOxygen(1);
             if (this.tag == "TileElem" && elemType == ElemType.Fire)
             {
                 gameManagement.gasCollectedVal += board.dotMarkCount;
@@ -196,6 +208,13 @@ public class Dot : MonoBehaviour
                     gameManagement.ConsumeOxygen(-1 * gameManagement.filterResultVal);
                     gameManagement.gasCollectedVal -= gameManagement.gasFilterVal;
                 }
+            }
+
+            // first release the previous ship tile for destroy
+            if (board.isShipClick)
+            {
+                board.shipPosition.x = column;
+                board.shipPosition.y = row;
             }
 
             // decrease oxygen firstly to make the logic correct
@@ -233,6 +252,29 @@ public class Dot : MonoBehaviour
                 // board.seedMarkCount = 0;
                 // gameManagement.DisplayDeltaText("");
                 // gameManagement.DisplayDialogueText("");
+            }
+
+            // then setup the new ship tile
+            if (board.isShipClick)
+            {
+                elemType = ElemType.Void;
+                SetColorByElemType();
+
+                board.isShipClick = false;
+            }
+
+            // override the results of DestroyAllMarked()
+            if ( shouldGenerate )
+            {
+                elemType = board.scannerList[0];
+                SetColorByElemType();
+            }
+
+            // ensure the clicked tile changed
+            if (!IsShipTile() && elemType == previousElemType)
+            {
+                elemType = previousElemType == ElemType.Void ? ElemType.Metal : ElemType.Void;
+                SetColorByElemType();
             }
 
             if (isEventReset)
@@ -279,6 +321,7 @@ public class Dot : MonoBehaviour
         board.ClearRockMark();
         board.seedMarkCount = 0;
         board.damageMarkCount = 0;
+        board.isShipClick = false;
         gameManagement.DisplayDeltaText("");
         gameManagement.DisplayDialogueText("");
     }
@@ -386,6 +429,11 @@ public class Dot : MonoBehaviour
         board.dotMarkCount++;
         board.damageMarkCount += damageVal;
 
+        if ( IsShipTile() )
+        {
+            board.isShipClick = true;
+        }
+
         // if (elemType != ElemType.Void)
         {
             board.MarkRock(column, row);
@@ -417,7 +465,9 @@ public class Dot : MonoBehaviour
         }
 
         // to be optimised
-        if (board.dotMarkCount > 1)
+        bool isValid = !IsShipTile() && board.dotMarkCount > 1 && (elemType == ElemType.Void || elemType == ElemType.Metal);
+
+        if (isValid || IsShipNeighbour())
         {
             UpdateDeltaText(thisTag, thisElemType);
         }
@@ -501,14 +551,14 @@ public class Dot : MonoBehaviour
         }
 
         string eventSign = "";
-        if (thisTag == "TileElem" && elemType != ElemType.Metal && elemType != ElemType.Void && board.dotMarkCount == gameManagement.eventThreshold)
-        {
-            eventSign += " +EVENT";
-        }
-        else if (thisTag == "TileElem" && thisElemType == ElemType.Void && board.isAnEvent)
-        {
-            eventSign += " " + board.eventElemType;
-        }
+        //if (thisTag == "TileElem" && elemType != ElemType.Metal && elemType != ElemType.Void && board.dotMarkCount == gameManagement.eventThreshold)
+        //{
+        //    eventSign += " +EVENT";
+        //}
+        //else if (thisTag == "TileElem" && thisElemType == ElemType.Void && board.isAnEvent)
+        //{
+        //    eventSign += " " + board.eventElemType;
+        //}
 
         if (tempOxygenVal > 0)
         {
@@ -561,6 +611,14 @@ public class Dot : MonoBehaviour
         Color color = Color.white;
         Sprite spriteTemp = gear;
 
+        if ( IsShipTile() )
+        {
+            spriteRend.sprite = ship;
+            spriteRend.material.color = Color.red;
+
+            return;
+        }
+
         if (elemType == ElemType.Metal)
         {
             color = Color.black;
@@ -583,6 +641,7 @@ public class Dot : MonoBehaviour
         else if (elemType == ElemType.Soil)
         {
             color = Color.yellow;
+            spriteTemp = rock;
         }
         else
         {
@@ -641,5 +700,15 @@ public class Dot : MonoBehaviour
         elemType = tempType;
 
         SetColorByElemType();
+    }
+
+    public bool IsShipTile()
+    {
+        return board.shipPosition.x == column && board.shipPosition.y == row;
+    }
+
+    public bool IsShipNeighbour()
+    {
+        return Mathf.Abs(board.shipPosition.x - column) + Mathf.Abs(board.shipPosition.y - row) == 1;
     }
 }

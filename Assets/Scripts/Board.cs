@@ -35,10 +35,10 @@ public enum ElemType
 {
     Metal,    
     Void,
+    Soil,
     Water,
     Wood,
     Fire,
-    Soil,
     // Wind,
 }
 
@@ -78,6 +78,8 @@ public class Board : MonoBehaviour
     public int seedMarkCount = 0;
     public int damageMarkCount = 0;
 
+    public bool isShipClick = false;
+
     public int exploredAreaCount = 0;
 
     public int toxicTileCount = 0;
@@ -86,6 +88,8 @@ public class Board : MonoBehaviour
     public bool isAnEvent = false;
 
     public List<ElemType> scannerList;
+
+    public Vector2Int shipPosition = new Vector2Int(0, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -124,8 +128,7 @@ public class Board : MonoBehaviour
 
 
         scannerList = new List<ElemType>();
-        scannerList.Add(ElemType.Void);
-        scannerList.Add(ElemType.Fire);
+        scannerList.Add(ElemType.Water);
 
         SetUp();
     }
@@ -1044,13 +1047,19 @@ public class Board : MonoBehaviour
         Dot thisDot = allDots[i, j].GetComponent<Dot>();
         if (thisDot.elemType == ElemType.Metal)
         {
-            int scannerIndex = Random.Range(0, scannerList.Count);
-            thisDot.elemType = scannerList[scannerIndex];
-            thisDot.SetColorByElemType();
+            //int scannerIndex = Random.Range(0, scannerList.Count);
+            //thisDot.elemType = scannerList[scannerIndex];
+            //thisDot.SetColorByElemType();
 
-            if (thisDot.elemType == ElemType.Fire)
+            //if (thisDot.elemType == ElemType.Fire)
+            //{
+            //    toxicTileCount++;
+            //}
+
+            if (Random.Range(0, 2) > 0)
             {
-                toxicTileCount++;
+                thisDot.elemType = ElemType.Void;
+                thisDot.SetColorByElemType();
             }
 
             gameManagement.currExploreCount++;
@@ -1085,50 +1094,56 @@ public class Board : MonoBehaviour
         }
         else // i.e. ElemType.Void without an event
         {
-            if (dotMarkCount > 0)
+            if ( Random.Range(0,2) > 0 )
             {
-                if (thisDot.elemType == ElemType.Wood)
-                {
-                    gameManagement.CollectGear(1);
-                }
-                else if (thisDot.elemType == ElemType.Water)
-                {
-                    gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenVal * -1); // add
-                }
-                else if (thisDot.elemType == ElemType.Fire)
-                {
-                    toxicTileCount--;
-                }
-
-                // particle
-                GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
-                var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
-                textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
-
-                //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
-                Destroy(allDots[i, j]);
-                allDots[i, j] = null;
-                isDestroyed = true;
+                thisDot.elemType = ElemType.Metal;
+                thisDot.SetColorByElemType();
             }
-            // else
-            // {
-            //     // thisDot.TransformElemType();
 
-            //     //if (thisDot.elemType == ElemType.Metal)
-            //     {
-            //         gameManagement.CollectGear(1);
-            //     }
+            //if (dotMarkCount > 0)
+            //{
+            //    if (thisDot.elemType == ElemType.Wood)
+            //    {
+            //        gameManagement.CollectGear(1);
+            //    }
+            //    else if (thisDot.elemType == ElemType.Water)
+            //    {
+            //        gameManagement.ConsumeOxygen(gameManagement.singleTileOxygenVal * -1); // add
+            //    }
+            //    else if (thisDot.elemType == ElemType.Fire)
+            //    {
+            //        toxicTileCount--;
+            //    }
 
-            //     // particle
-            //     GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
-            //     var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
-            //     textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
+            //    // particle
+            //    GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
+            //    var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
+            //    textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
 
-            //     //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
-            //     Destroy(allDots[i, j]);
-            //     allDots[i, j] = null;
-            //     isDestroyed = true;
-            // }
+            //    //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
+            //    Destroy(allDots[i, j]);
+            //    allDots[i, j] = null;
+            //    isDestroyed = true;
+            //}
+            //// else
+            //// {
+            ////     // thisDot.TransformElemType();
+
+            ////     //if (thisDot.elemType == ElemType.Metal)
+            ////     {
+            ////         gameManagement.CollectGear(1);
+            ////     }
+
+            ////     // particle
+            ////     GameObject thisSpriteParticle = Instantiate(spriteParticle, allDots[i, j].transform.position, Quaternion.identity);
+            ////     var textureSheetAnimation = thisSpriteParticle.GetComponent<ParticleSystem>().textureSheetAnimation;
+            ////     textureSheetAnimation.AddSprite(allDots[i, j].GetComponent<SpriteRenderer>().sprite);
+
+            ////     //allDots[i, j].GetComponent<Dot>().marked = false; // unnecessary due to destroy
+            ////     Destroy(allDots[i, j]);
+            ////     allDots[i, j] = null;
+            ////     isDestroyed = true;
+            //// }
         }
 
         return isDestroyed;
