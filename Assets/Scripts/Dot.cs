@@ -617,7 +617,33 @@ public class Dot : MonoBehaviour
         }
         else if (this.tag == "TileElem")
         {
-            answerStr = "Action: explore the nearby area";
+            if (IsShipTile())
+            {
+                answerStr = "INVALID: the current position of spaceship";
+            }
+            else if (elemType != ElemType.Void && elemType != ElemType.Metal)
+            {
+                if (IsShipNeighbour())
+                {
+                    answerStr = "Take it!!!";
+                }
+                else
+                {
+                    answerStr = "INVALID: not a neighbour of spaceship";
+                }
+            }
+            else if (board.dotMarkCount < 2 && !IsShipNeighbour())
+            {
+                answerStr = "INVALID: an isolated area";
+            }
+            else if (board.isShipClick)
+            {
+                answerStr = "Move your spaceship to here";
+            }
+            else
+            {
+                answerStr = "Explore the area";
+            }
         }
         else
         {

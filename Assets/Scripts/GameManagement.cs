@@ -457,7 +457,8 @@ public class GameManagement : MonoBehaviour
         float exploreRatio = (float)currExploreCount / (float)sectorSize;
         progressBar.fillAmount = 1 - exploreRatio;
 
+        int realCap = uncertaintyCap + 1;
         progressText.text = "" + currExploreCount + "/" + sectorSize;
-        sectorLevelText.text = "Sector[" + sectorLevel + "]:\n" + uncertaintyCap + "+ BLACK = O2" ;
+        sectorLevelText.text = "Sector[" + sectorLevel + "]:\n" + realCap + "+ BLACK = O2" ;
     }
 }
