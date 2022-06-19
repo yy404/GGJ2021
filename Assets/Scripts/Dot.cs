@@ -309,6 +309,27 @@ public class Dot : MonoBehaviour
             else
             {
                 MarkIt(this.tag, elemType);
+                if (board.isShipClick)
+                {
+                    spriteRend.sprite = ship;
+                    spriteRend.material.color = Color.red;
+                    SetColorAlphaVal(0.2f);
+                }
+                else
+                {
+                    bool shouldGenerate = board.damageMarkCount > gameManagement.uncertaintyCap && this.tag == "TileElem" && elemType == ElemType.Metal;
+
+                    if (shouldGenerate)
+                    {
+                         if (board.scannerList[0] == ElemType.Water)
+                        {
+                            spriteRend.sprite = oxygen;
+                            spriteRend.material.color = Color.blue;
+                            SetColorAlphaVal(0.2f);
+                        }
+                    }
+                }
+
             }
 
             gameManagement.DisplayDialogueText(GeneDialogueText());
