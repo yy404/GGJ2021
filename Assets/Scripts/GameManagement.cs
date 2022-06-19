@@ -176,6 +176,7 @@ public class GameManagement : MonoBehaviour
                 eventMoveCount = -1;
 
                 sectorLevel++;
+                uncertaintyCap++;
                 gasFilterVal += gasFilterInc;
             }
         }
@@ -457,6 +458,6 @@ public class GameManagement : MonoBehaviour
         progressBar.fillAmount = 1 - exploreRatio;
 
         progressText.text = "" + currExploreCount + "/" + sectorSize;
-        sectorLevelText.text = "Sector " + sectorLevel;
+        sectorLevelText.text = "Sector[" + sectorLevel + "]:\n" + uncertaintyCap + "+ BLACK = O2" ;
     }
 }

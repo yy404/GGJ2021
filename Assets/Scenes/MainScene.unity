@@ -3310,8 +3310,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -201, y: -23.424}
-  m_SizeDelta: {x: 186, y: 46.847}
+  m_AnchoredPosition: {x: -321.728, y: -18}
+  m_SizeDelta: {x: 261.809, y: 123.71}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1055799319
 MonoBehaviour:
@@ -3337,16 +3337,18 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
     m_FontSize: 30
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 3
-    m_MaxSize: 40
+    m_MaxSize: 60
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 'New Text
+
+    New Text'
 --- !u!222 &1055799320
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4190,7 +4192,7 @@ MonoBehaviour:
   deltaText: {fileID: 1279507213}
   maxOxygen: 20
   oxygenDailyConsumption: 1
-  singleTileOxygenVal: 1
+  singleTileOxygenVal: 3
   singleTileWasteVal: 2
   singleTileOxygenValPlus: 0
   endGamePanel: {fileID: 287355019}
