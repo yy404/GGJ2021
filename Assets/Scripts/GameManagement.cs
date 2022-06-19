@@ -91,6 +91,10 @@ public class GameManagement : MonoBehaviour
 
     public int uncertaintyCap = 3;
 
+    public Image progressBar;
+    public Text progressText;
+    public Text sectorLevelText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -180,6 +184,7 @@ public class GameManagement : MonoBehaviour
         board.scannerList.RemoveAt(0);
 
         UpdateDiary();
+        UpdateProgressBar();
         currDay++;
         currExploreMoveCount++;
     }
@@ -444,5 +449,14 @@ public class GameManagement : MonoBehaviour
     {
         currOxygen = maxOxygen;
         Debug.Log("Refilled oxygen");
+    }
+
+    public void UpdateProgressBar()
+    {
+        float exploreRatio = (float)currExploreCount / (float)sectorSize;
+        progressBar.fillAmount = 1 - exploreRatio;
+
+        progressText.text = "" + currExploreCount + "/" + sectorSize;
+        sectorLevelText.text = "Sector " + sectorLevel;
     }
 }
